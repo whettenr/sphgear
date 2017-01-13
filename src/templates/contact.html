@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% block head_title %}Contact | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<h1>Contact</h1>
+
+<div class="row">	
+	<div class="col-sm-9">
+		<form role="form" action="" method="post">
+			{% csrf_token %}
+			{{ form|crispy }}
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>	
+	</div>
+	
+	<div class="col-sm-3">
+		{% if company_info %}
+			<div class="contact">
+				<div class="col-xs-12 row contact-el">
+					<i class="fa fa-2x fa-paper-plane" aria-hidden="true"></i>
+					<a href= "mailto:{{ company_info.email }}">Email SPH</a>
+				</div>
+				
+				<div class="col-xs-12 row contact-el">
+					<i class="fa fa-2x fa-phone-square" aria-hidden="true"></i>
+					{{ company_info.phone_number }}
+				</div>
+				
+				<div class="col-xs-12 row contact-el">
+					<a href="{{ company_info.fb_link }}"><i class="fa fa-2x fa-facebook-square" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		{% else %}
+			<p>contact info coming soon...</p>
+		{% endif %}
+	</div>
+
+	<div class="container form-container">
+    <div class="row">
+        <div class="col-md-6">
+          <div class="form-login">
+						<h4>Contact Us</h4>
+						<form action="" method="post">
+						{% csrf_token %}
+						{{ form|crispy }}
+
+						<button type="submit" class="btn btn-primary btn-block">Submit</button>
+
+						</form>
+          </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+
+
+{% endblock %}

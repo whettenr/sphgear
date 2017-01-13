@@ -1,0 +1,47 @@
+<footer class="text-muted footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <ul class="nav navbar-nav">
+          <div class="row">
+            <div class=col-md-11>
+            <li class="nav-item"><a class="btn btn-secondary" href="{% url 'home' %}">Home</a></li>
+            <li class="nav-item"><a href="{% url 'contact' %}" class="btn btn-secondary">Contact</a></li>
+            <li class="nav-item"><a href="{% url 'about' %}" class="btn btn-secondary">About</a></li>
+            <li class="nav-item"><a href="{% url 'posts:list' %}" class="btn btn-secondary">Blog</a></li>
+            {% if request.user.is_staff %}
+            <li class="nav-item "><a href="{% url 'posts:create' %}" class="btn btn-outline-danger">Create Blog Post</a></li>
+             <li class="nav-item"><a href="{% url 'orders' %}" class="btn btn-outline-danger">All Orders</a></li>
+            </div>
+            {% endif %}
+            {% if request.user.is_staff %}
+            <div class=col-md-1>
+             
+            </div>
+            {% endif %}
+          </div>
+        </ul>
+      </div>   
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="fb-like text-xs-left" data-href="https://www.facebook.com/SPHGear2015/" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      
+      <div class="col-xs-2">
+        <p class="text-xs-left text-xs-center"> &copy; SPH Gear</p>
+      </div>
+      <div class="col-xs-10">
+        <p class="text-xs-right text-xs-center">Curious about Kyle Schurig? <a href="http://www.schurigperformancehorses.com/">Visit Kyle's homepage</a> or checkout our 
+        <a href="http://www.schurigperformancehorses.com/horses/">horses</a> and upcoming 
+        <a href="http://www.schurigperformancehorses.com/events/">events</a>.</p>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+

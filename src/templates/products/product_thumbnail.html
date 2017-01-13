@@ -1,0 +1,24 @@
+<div class="card">  
+  {% if product.get_image_url %}
+    <a href="{{product.get_absolute_url}}"><img class="card-img-top img-fluid" src='{{ product.get_image_url }}' /></a>
+  {% endif %}
+  <div class="card-block">
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="card-title text-xs-center text-md-left align-text-top"><a href='{{ product.get_absolute_url }}'>{{ product.title }}</a></h4>
+      </div>
+      <div class="col-md-6 text-xs-right">
+        <a class="btn btn-primary btn-block" href="{{ product.get_absolute_url }}">
+        Buy <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card-footer text-muted">
+    <i class="fa fa-usd" aria-hidden="true"></i>
+      {{ product.variation_set.first.get_html_price }}
+      {% if not product.active %}
+        |<em style="color:red"> Out of Stock</em>
+      {% endif %} 
+  </div>
+</div>

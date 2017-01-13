@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Categories <small><a href='{% url "products" %}'>(view Product Catalog)</a></small></h1>
+
+{% if object_list.count == 0 %}
+
+No Categories yet ...
+{% else %}
+<div class='row'>
+  <div class="card-deck-wrapper">
+  	<div class="card-deck">
+    {% for cat in object_list %}
+    {% if cat.active %}   
+		<div class="card">  
+			<div class="card-block">
+				<h4 class="card-title text-xs-center text-md-left align-text-top"><a href='{% url "category_detail" cat.slug %}'>
+				{{ cat.title }}</a></h4>
+    		{% if cat.description %}   
+					<p>{{ cat.description }}</p>
+				{% endif %}
+				<a class="btn btn-primary" href='{% url "category_detail" cat.slug %}'>
+				  View Products <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+			</div>
+		</div>
+			{% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

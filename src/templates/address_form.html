@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class='row'>
+<div class='col-md-8 offset-md-2'>
+
+{% if title %}
+<h1 class='{% if title_align_center %}text-xs-center{% endif %}'>{{ title }}</h1>
+{% endif %}
+
+<form method='POST'  action=''>{% csrf_token %}
+
+    {{ form|crispy }}
+    
+    <div id="co" class="form-group">
+    <label class="form-control-label">Select Country</label>
+    <div id="countries_states2" class="bfh-selectbox bfh-countries" data-country="US"></div>
+	</div>
+	
+	<div id="st" class="form-group">
+    	<label class="form-control-label">Select State/Province/Region</label>
+		<div class="bfh-selectbox bfh-states" data-country="countries_states2"></div>
+	</div>
+
+	<!-- <input class='btn btn-primary btn-block' type='submit' value='Submit' /> -->
+
+
+<input class="btn btn-primary" type="submit" value="Next" />
+</form>
+
+</div>
+</div>
+{% endblock %}
+
+<script>
+{% block jquery %}
+	$('input[type="submit"]').click(function(event){
+		country = $('#countries_states2').val()
+		state = $('.bfh-states input').val()
+		$('input[name="country"]').val(country);
+		
+		$('input[name="state"]').val(state);
+		console.log(country)
+		console.log(state)
+		if(!state || !country) {
+			event.preventDefault();
+			$('#st').addClass('has-danger')
+		}
+		if(!country) {
+			event.preventDefault();
+			$('#co').addClass('has-danger')
+		}
+	});
+{% endblock %}
+</script>

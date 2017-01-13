@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+</style>
+<script>
+{% block jquery %}
+
+
+// function setPrice(){
+// 	var price = $(".variation_select option:selected").attr("data-price")
+
+// 	var sale_price = $(".variation_select option:selected").attr("data-sale-price")
+// 	if (sale_price != "" && sale_price != "None" && sale_price != null ) {
+// 	$("#price").html("<h3>" + sale_price + " <small class='og-price'>" + price  + "</small></h3>");
+// 	} else {
+// 	$("#price").html(price);
+// 	}
+// }
+// setPrice()
+
+// $(".variation_select").change(function(){
+// 	setPrice()
+// 	// var img = $(".variation_select option:selected").attr("data-img")
+// 	// $("img").attr("src", img);
+// })
+
+
+
+function setPrice(){
+	var color = $(".color-select option:selected").attr("data-color")
+	var size = $(".size-select option:selected").attr("data-size")
+	var sale_price;
+	var id;
+	var price;
+	var check = false;
+	{% for vari_obj in object.variation_set.all %}
+	  if (size == '{{vari_obj.size|safe}}' && color == '{{vari_obj.color|safe}}') {
+    		sale_price = '{{vari_obj.sale_price}}'
+    		price = '{{vari_obj.price}}'
+    		console.log('{{vari_obj.inventory}}')
+    		if('{{vari_obj.inventory}}' != 'None'){
+    			if({{vari_obj.inventory}} >= 1) {
+        			check = true
+    			}
+    		}
+		}	
+	{% endfor %}
+	if(check == true) {
+		if (sale_price != "" && sale_price != "None" && sale_price != null ) {
+			$("#price").html("<h3>" + sale_price + " <small class='og-price'>" + price  + "</small></h3>");
+		} else {
+			$("#price").html(price);
+		}
+		$("#cart-btn[type=submit]").removeAttr('disabled');
+	} else {
+		$("#price").html("<p><small>Not in stock</small></p>")
+		$("input[type=submit]").attr('disabled','disabled');
+	}
+	
+}
+setPrice()
+
+$(".color-select").change(function(){
+	setPrice()
+})
+
+$(".size-select").change(function(){
+	setPrice()
+})
+
+
+
+// ajax add to cart
+
+// $("#submit-btn").click(function(event){
+// 	event.preventDefault();
+// 	var formData = $("#add-form").serialize();
+// 	console.log(formData);
+// 	$.ajax({
+// 		type: "GET", // "POST"
+// 		url: "{% url 'cart' %}",
+// 		data: formData,
+// 		success: function(data) {
+// 			showFlashMessage(data.flash_message);
+// 			updateCartItemCount();
+// 		}, 
+// 		error: function(response, error) {
+// 			// console.log(response)
+// 			// console.log(error)
+// 			$("#add-form").submit()
+// 		}
+// 	})
+// })
+
+function getId(){
+	var color = $(".color-select option:selected").attr("data-color")
+	var size = $(".size-select option:selected").attr("data-size")
+	var sale_price;
+	var price; 
+	var id;
+	{% for vari_obj in object.variation_set.all %}
+	  if (size == '{{vari_obj.size|safe}}' && color == '{{vari_obj.color|safe}}') {
+    		sale_price = '{{vari_obj.sale_price}}'
+    		price = '{{vari_obj.price}}'
+    		id = '{{vari_obj.id}}'
+		}	
+	{% endfor %}
+	return id
+}
+
+$("#cart-btn").click(function(event){
+	event.preventDefault();
+
+	var values = {};
+	$.each($("#add-cart-form").serializeArray(), function(i, field) {
+    	values[field.name] = field.value;
+	});
+	var formData = 'item='+getId()+'&'+'qty='+values['qty']
+	console.log(formData); 
+	$.ajax({
+		type: "GET", // "POST"
+		url: "{% url 'cart' %}",
+		data: formData,
+		success: function(data) {
+			showFlashMessage(data.flash_message);
+			updateCartItemCount();
+		}, 
+		error: function(response, error) {
+			// console.log(response)
+			// console.log(error)
+			$("#add-cart-form").submit()
+		}
+	})
+})
+
+
+
+{% endblock %}
+</script>
+
+
+{% block content %}
+
+
+<div class='row'>
+
+<div class='col-sm-8'>
+<h2>{{ object.title }}</h2>
+
+{% if object.get_image_url %} 
+<div class="gallery" >
+<div class="preview" >
+	<img id="preview" class="img-fluid" src="{{ object.get_image_url }}" alt="" />
+</div>
+{% if images.count > 1 %}
+<div class="thumbnails">
+	
+	{% for img in images %}
+	<img onmouseover="getElementById('preview').src=getElementById('{{img.image}}').src" id="{{img.image}}" src="{{ img.image.url }}" alt="" />
+	{% endfor %}
+</div>
+{% endif %}
+</div>
+{% endif %}
+
+<p class='lead'>
+{{ object.description|safe }}
+{% if request.user.is_staff %}
+<a href="{% url 'product_inventory' pk=object.pk %}" class="btn btn-block btn-outline-danger">View inventory</a>
+{% endif %}
+</p>
+</div>
+
+
+<!-- Product Sidebar -->
+<div class='col-sm-4'>
+<form id='add-cart-form' method='GET' action="{% url 'cart' %}">
+
+<p id='jquery-message' class='lead'>
+<!-- {% if not vari_obj.inventory %} <small style="color: red;"> hey </small>{% endif %} -->
+</p>
+<h3 id='price'>{{ object.variation_set.first.price }}</h3>
+	<h5>Size</h5>
+	<select name='size' class='form-control size-select'>
+		{% for size in sizes %}
+		<option  data-size="{{ size.size }}" value="size">
+			{{ size.size }} 
+		</option>
+		{% endfor %}
+	</select>
+	<br>
+	<h5>Color</h5>
+	<select name='color' class='form-control color-select'>
+		{% for color in colors %}
+			<option  data-color="{{color.color}}" value="color">
+				{{ color.color }}
+			</option>
+		{% endfor %}
+	</select>
+	<br>
+	<h5>Quantity</h5>
+	<input class='form-control' type='number' name='qty' id='qty' value='1' />
+	<br>
+	<input id='cart-btn' type='submit' value='Add to Cart' class='btn btn-default' />
+</form>
+
+
+<br/>
+<hr/>
+<p>
+Share</p><br/>
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+<i class="fa fa-facebook-square fa-3x"></i></a>
+
+<a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}.">
+<i class="fa fa-reddit-square fa-3x" aria-hidden="true"></i></a>
+
+<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'><i class="fa fa-google-plus-square fa-3x" aria-hidden="true"></i></a>
+
+<a data-pin-do="buttonBookmark" href="//www.pinterest.com/pin/create/button/">
+<i class="fa fa-pinterest-square fa-3x" aria-hidden="true"></i></a>
+<!-- <a href="#">
+<i class="fa fa-twitter-square fa-3x"></i></a>
+</p> -->
+
+<hr/>
+<h4>Related Products</h4>
+
+	{% for product in related %}
+	<div class='row'>
+		<div class='col-xs-12'>
+			{% include "products/product_thumbnail.html" with product=product price="True" %}
+		</div>
+	</div>
+	{% endfor %}
+
+
+</div>
+<!-- End Product Sidebar -->
+
+</div>
+
+
+
+{% endblock %}

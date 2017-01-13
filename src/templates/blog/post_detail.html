@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}
+{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+{% block content %}
+
+
+<div class='col-sm-8 offset-sm-2'>
+  <!-- Title -->
+  <h1>{{ title }}</h1>
+  <!-- Author -->
+  <p class="lead">by {{ instance.user }}</p>
+  
+  <hr>
+  <!-- Date/Time/Edit Info -->
+  <p>
+    <i class="fa fa-clock-o" aria-hidden="true"></i> 
+    Published on {{ instance.publish }} 
+    <small>({{ instance.publish|timesince }} ago)</small>
+    {% if request.user.is_staff %}
+      {% if instance.draft %}
+        |<em style="color:red"> Draft</em>
+      {% endif %} 
+      {% if instance.publish > today %}
+        |<em style="color:red"> Future Post</em>
+      {% endif %}
+      <a class="btn btn-outline-danger" href="{% url 'posts:update' instance.slug %}" role="button">Edit Post</a>
+    {% endif %}
+  </p>
+
+  <hr>
+  <div class="row">
+  <div class="col-sm-8">
+    <p>Read time: {% if instance.read_time <= 1 %} < 1 Minute {% else %}{{ instance.read_time }} minutes {% endif %}</p>
+  </div>
+
+  <div class="col-sm-4">
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+    <i class="fa fa-facebook-square fa-2x"></i></a>
+
+    <a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}.">
+    <i class="fa fa-reddit-square fa-2x" aria-hidden="true"></i></a>
+
+    <a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'><i class="fa fa-google-plus-square fa-2x" aria-hidden="true"></i></a>
+
+    <a data-pin-do="buttonBookmark" href="//www.pinterest.com/pin/create/button/">
+    <i class="fa fa-pinterest-square fa-2x" aria-hidden="true"></i></a>
+  </div>
+  </div>
+  <hr>
+
+  <!-- Post Pic -->
+  {% if instance.image %}
+    <img src='{{ instance.image.url }}' class='img-fluid'>
+    <hr>
+  {% endif %}
+
+
+  <!-- Post Content -->
+  <div class='post-detail-item'>{{ instance.get_markdown }}</div>
+
+
+</div>
+
+
+
+    <div>
+
+        <p class='lead'>Comments</p>
+        {% if request.user.is_authenticated %}
+        <form method="POST" action="."> {% csrf_token %}
+            {{ comment_form|crispy }}
+            <input type='submit' value='Post comment' class='btn btn-primary'>
+        </form>
+        <br>
+        <p id='preview-content'></p>
+        {% else %}
+        <p>You must login to comment </p>
+        {% endif %}
+        <hr/>
+        {% for comment in comments %}
+
+        <blockquote class="blockquote">
+          <p>{{ comment.content }}</p>
+          <footer class="blockquote-footer">via {{ comment.user }} | {{ comment.timestamp|timesince }} ago | {% if comment.children.count > 0 %}{{ comment.children.count }} Comment{% if comment.children.count > 1 %}s{% endif %} | {% endif %} <a class='comment-reply-btn' href='#'>Reply</a> | <a class='' href='{{ comment.get_absolute_url }}'>Thread</a></footer>
+            
+
+          <div class='comment-reply'>
+              {% for child_comment in comment.children %}
+                <blockquote class="blockquote">
+                <p>{{ child_comment.content }}</p>
+                <footer class="blockquote-footer">via {{ child_comment.user }} | {{ child_comment.timestamp|timesince }} ago</footer>
+                </blockquote>
+             {% endfor %}
+            {% if request.user.is_authenticated %}
+            <form method="POST" action="."> {% csrf_token %}
+                {{ comment_form|crispy }}
+                <input type='hidden' name='parent_id' value='{{ comment.id }}'>
+                <input type='submit' value='Reply' class='btn btn-default'>
+            </form>
+            <p id='preview-content'></p>
+            {% else %}
+        <p>You must login to comment </p>
+        {% endif %}
+        </div>
+
+        </blockquote>
+
+        <hr/>
+        {% endfor %}
+    </div>
+
+</div>
+</div>
+</div>
+
+{% endblock content %}
+
+<script>
+{% block jquery %}
+
+  var contentInput = $("#id_content");
+
+  function setContent(value){
+      var markedContent = marked(value)
+      $("#preview-content").html("<code>comment preview</code><br>" + markedContent)
+  }
+  setContent(contentInput.val())
+
+  contentInput.keyup(function(){
+      var newContent = $(this).val()
+      setContent(newContent)
+  })
+
+  $(".comment-reply-btn").click(function(event){
+      event.preventDefault();
+      $(this).parent().next(".comment-reply").fadeToggle();
+  })
+{% endblock %}
+</script>
+
+
+
+
+
+
+<div class='col-sm-8 offset-sm-2'>
+    {% if instance.image %}
+    <img src='{{ instance.image.url }}' class='img-fluid'>
+    {% endif %}
+<h1>{{ title }} <small>{% if instance.draft %}<span style='color:red;'>Draft</span> {% endif %}{{ instance.publish }}</small></h1>
+
+<!-- {% if instance.read_time|time:"i" <= "01" %} < 1 minute {% else %}{{ instance.read_time|time:"i" }} minutes {% endif %} -->
+
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'posts:update' instance.slug %}">Edit</a></p>
+{% endif %}
+<p>Read time: {% if instance.read_time <= 1 %} < 1 Minute {% else %}{{ instance.read_time }} minutes {% endif %}</p>
+{% if instance.user %}
+<p>Author: {{ instance.user }}</p>
+{% endif %}
+
+<p><a href="{% url 'posts:list' %}">Back to Blog List</a></p>
+
+<p><div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true">lkjh</div>
+<hr/>
+</p>
+
+<div class="fb-share-button" data-href="{{ request.build_absolute_uri }}" data-layout="button" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">Share</a></div>
+
+<p>
+<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+Facebook
+</a>
+
+<a href="https://twitter.com/home?status={{ instance.content|truncatechars:80|urlify }}%20{{ request.build_absolute_uri }}">
+Twitter
+</a>
+
+
+
+
+<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ instance.title }}&summary={{ share_string }}&source={{ request.build_absolute_uri }}">
+Linkedin
+</a>
+
+<a data-pin-do="buttonBookmark" href="{{ request.build_absolute_uri }}"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_gray_20.png" /></a>
+
+<a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}.">Reddit</a>
+<a href="//www.reddit.com/submit" onclick="window.location = '//www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <img src="//www.redditstatic.com/spreddit1.gif" alt="submit to reddit" border="0" /> </a>
+
+<a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}."> <img src="//www.redditstatic.com/spreddit1.gif" alt="submit to reddit" border="0" /> </a>
+
+</p>
+<div class='row'>
+<div class='col-sm-12 '>
+
+   <div class='post-detail-item'>{{ instance.get_markdown }}</div>
+
+    <hr/>
+    <br/>

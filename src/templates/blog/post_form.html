@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block head_extra %} 
+{{ form.media }}
+{% endblock head_extra %}
+
+{% block head_title %}
+Edit|{{ instance.title }} | {{ block.super }}
+{% endblock head_title %}
+
+
+
+{% block content %}
+<div class='col-sm-6'>
+<h1>Preview</h1>
+<hr/>
+<div class='content-preview'>
+    <h2 id='preview-title'></h2>
+    <p id='preview-content'></p>
+</div>
+</div>
+<div class='col-sm-6'>
+<h1>Form</h1>
+<hr/>
+
+<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
+{{ form|crispy }}
+<input type='submit' class='btn btn-default' value='Create/Update Post' />
+</form>
+</div>
+{% endblock content %}
+
+<script>
+{% block jquery %}
+
+	$(".content-markdown").each(function(){
+	    var content = $(this).text()
+	    var markedContent = marked(content)
+	    $(this).html(markedContent)
+	})
+	$(".post-detail-item img").each(function(){
+	    $(this).addClass("img-fluid");
+	})
+
+
+	var contentInput = $("#id_content");
+
+	function setContent(value){
+	    var markedContent = marked(value)
+	    $("#preview-content").html(markedContent)
+	    $("#preview-content img").each(function(){
+	        $(this).addClass("img-fluid")
+	    })
+	}
+	setContent(contentInput.val())
+
+	contentInput.keyup(function(){
+	    var newContent = $(this).val()
+	    setContent(newContent)
+	})
+
+	var titleInput = $("#id_title");
+
+
+
+	function setTitle(value) {
+	    $("#preview-title").text(value)
+	}
+	setTitle(titleInput.val())
+
+	titleInput.keyup(function(){
+	    var newContent = $(this).val()
+	    setTitle(newContent)
+	})
+
+	$(".comment-reply-btn").click(function(event){
+	    event.preventDefault();
+	    $(this).parent().next(".comment-reply").fadeToggle();
+	})
+{% endblock %}
+</script>

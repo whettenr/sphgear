@@ -1,0 +1,69 @@
+{% load i18n %}
+{% load account socialaccount %} 
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home' %}">SPH Gear</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="{% if request.resolver_match.url_name == 'products' %}active{% endif %}"><a href="{% url 'products' %}">Shop</a></li>
+        <li class="{% if request.resolver_match.namespaces.0 == 'posts' %}active{% endif %}"><a href="{% url 'posts:list' %}">Blog</a></li>
+        <li><a>{{ request.session.cart_item_count }}</a></li>
+        <!-- <li class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><a href="{% url 'contact' %}">Contact</a></li> -->
+      </ul>
+
+      <form class="navbar-form navbar-left" method="GET" role="search" action='{% url "products" %}'>
+
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search store" name="q" value='{{ request.GET.q }}'>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href='{% url "cart" %}'><i class="fa fa-shopping-cart fa-navbar-cart"></i> <span id="cart-count-badge" class='badge'>{% if request.session.cart_item_count == "None" %}0{% else %}{{ request.session.cart_item_count }}{% endif %}</span></a>
+        </li>
+        
+
+
+        {% if request.user.is_authenticated %}
+          <li class="{% if request.resolver_match.url_name == 'orders' %}active{% endif %}">
+            <a  href="{% url 'orders' %}">Orders</a>
+          </li> 
+          <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+        {% else %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Login/Register <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <form action="{% url 'account_login' %}" class="navbar-form" method="post">
+                  {% csrf_token %}
+                  <input class="form-control" type="text" placeholder="Username or e-mail" name="login">
+                  <input class="form-control" type="password" placeholder="Password" name="password">
+                  {% if redirect_field_value %}
+                      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <button type="submit" class="btn btn-primary btn-block">Login</button><br>
+              </form>
+              <li role="separator" class="divider"></li>
+
+              <a class="btn btn-primary btn-block" href="{% provider_login_url "facebook" method="js_sdk" %}"><i class="fa fa-facebook-square fa-2x face-nav-fa" aria-hidden="true"></i> <p class="face-nav-p">Login with Facebook</p></a>
+              <li role="separator" class="divider"></li>
+              <li><a href="{% url 'account_reset_password' %}">Forgot Password?</a></li>
+              <li><a href="{% url 'account_signup' %}">Dont have an account?</a></li>
+            </ul>
+          </li>
+        {% endif %}
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
