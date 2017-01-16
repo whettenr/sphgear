@@ -36,10 +36,31 @@ if settings.DEBUG:
       private_key=settings.BRAINTREE_PRIVATE)
 
 
+def find_user_cart_and_order(self):
+	user_carts = Cart.objects.filter(user=self.request.user).order_by('-timestamp')
+	print user_carts
+	if user_carts:
+		for cart in user_carts:
+			print cart
+			orders = cart.order_set.filter(status='created')
+			if orders or not cart.order_set.all():
+				try:
+					self.request.session["order_id"] = orders[0].id
+				except:
+					pass
+				cart_id = cart.id
+				print "yo im out"
+				return cart_id
+
+
 class ItemCountView(View):
 	def get(self, request, *args, **kwargs):
 		if request.is_ajax():
+			
 			cart_id = self.request.session.get("cart_id")
+			if cart_id == None:
+				if request.user.is_authenticated():
+					self.request.session["cart_id"] = cart_id = find_user_cart_and_order(self)
 			if cart_id == None:
 				count = 0
 			else:
@@ -62,14 +83,7 @@ class CartView(SingleObjectMixin, View):
 		cart_id = self.request.session.get("cart_id")
 		if cart_id == None:
 			if self.request.user.is_authenticated():
-				user_carts = Cart.objects.filter(user=self.request.user).order_by('timestamp')
-				print user_carts
-				if user_carts:
-					for cart in user_carts:
-						print cart
-						if cart.order_set.filter(status='created') or not cart.order_set.all():
-							cart_id = cart.id
-							print cart_id
+				cart_id = find_user_cart_and_order(self)
 			if cart_id == None:
 				print 'yuh'
 				cart = Cart()
@@ -80,11 +94,11 @@ class CartView(SingleObjectMixin, View):
 				cart_id = cart.id
 			self.request.session["cart_id"] = cart_id
 		cart = Cart.objects.get(id=cart_id)
+
 		if self.request.user.is_authenticated():
 			cart.user = self.request.user
 			cart.save()
-		
-		
+
 		print cart.id
 		print cart.order_set.all()
 		return cart
@@ -295,6 +309,9 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 
 class CheckoutFinalView(CartOrderMixin, View):
 	def post(self, request, *args, **kwargs):
+		if '_remove' in self.request.POST:
+			print 'hi'
+			return reverse("checkout")
 		order = self.get_order()
 		order_total = order.order_total
 		print "order total"

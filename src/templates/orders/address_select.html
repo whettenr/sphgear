@@ -9,15 +9,13 @@
             <div class="form-login">
               <h4>Select an addresses for this order</h4>
               <form method="POST" action=''>{% csrf_token %}
+      				{{ form|crispy }}
 
-				{{ form|crispy }}
-
-				<input class='btn btn-primary' type='submit' value='Select' name='_select'/>
-				<a class='btn btn-success' href='{% url "user_address_create" %}'>Add new</a>
-				<input class='btn btn-danger' type='submit' value='Remove' name='_remove'/>
-				<!-- <input class='btn btn-default' type='submit' value='Edit' name='_edit'/> -->
-
-				</form>
+      				<input class='btn btn-primary' type='submit' value='Select' name='_select'/>
+      				<a class='btn btn-success' href='{% url "user_address_create" %}'>Add new</a>
+      				<input class='btn btn-danger' type='submit' value='Remove' name='_remove'/>
+      				<!-- <input class='btn btn-default' type='submit' value='Edit' name='_edit'/> -->
+      				</form>
             </div>
         </div>
     </div>

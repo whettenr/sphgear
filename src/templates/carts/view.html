@@ -75,57 +75,203 @@ $(".item-qty").change(function(){
 {% if object.cartitem_set.count < 1 %}
 
 {% include "carts/empty_cart.html" %}
+</div>
 {% else %}
+</div>
 
-<div class='col-sm-8 offset-sm-2'>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+    		<div class="invoice-title">
+    			<h2>Your Cart</h2>
+    		</div>
+    		<hr>
+    	</div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>Cart summary</strong></h3>
+    			</div>
+    			<div class="panel-body">
+    				<div class="table-responsive">
+    					<table class="table table-condensed">
+    						<thead>
+                    <tr>
+        							<td><strong>Item</strong></td>
+        							<td class="text-center"><strong>Price</strong></td>
+        							<td class="text-center"><strong>Quantity</strong></td>
+        							<td class="text-right"><strong>Totals</strong></td>
+        							<td class="text-center"><strong>Remove</strong></td>
+                    </tr>
+    						</thead>
+    						<tbody>
+    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
+    							{% for item in object.cartitem_set.all %}
+    							<tr id='item-{{ item.item.id }}'>
+    								<td>{{ item.item.get_title }}</td>
+    								<td class="text-center">{{item.item.get_html_price}}</td>
+    								<td class="text-center"><form action="." method="GET"><input type='hidden' name='item' value='{{ item.item.id }}' /><input style="width:4em;" type='number' class='item-qty' name='qty' value='{{ item.quantity }}' /><input type='submit' class='btn-update btn btn-link' value='Update item' style='display:none;'/></form></td>
+										<td class="text-right" id='item-line-total-{{ item.item.id }}'>{{ item.line_item_total }}</td>
+										<td class='text-center'>
+											<a href='{{ item.remove }}'>
+											<i class="fa fa-times" aria-hidden="true"></i>
+											</a>
+										</td>
+    							</tr>
+    							{% endfor %}
+    							<tr>
+    								<td class="thick-line"></td>
+    								<td class="thick-line"></td>
+    								<td class="thick-line text-right"><strong>Subtotal:</strong></td>
+    								<td class="thick-line text-right"><span id='subtotal'>{{ object.subtotal }}</span></td>
+    								<td class="thick-line"></td>
 
-<h1>Your cart</h1>
-<table class='table'> 
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-right"><strong>Tax (Estimated):</strong></td>
+    								<td class="no-line text-right"><span id='taxtotal'>{{ object.tax_total }}</span></td>
+    							</tr>
+    							
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-right"><strong>Total:</strong></td>
+    								<td class="no-line text-right"><span id='carttotal'>{{ object.total }}</span></td>
+    							</tr>
+    							<!-- <tr>
 
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								
+    							</tr> -->
+    						</tbody>
 
-{% for item in object.cartitem_set.all %}
-
-<tr id='item-{{ item.item.id }}'>
-
-<td>{{ item.item.get_title }}</td>
-
-
-<td><form action="." method="GET" ><input type='hidden' name='item' value='{{ item.item.id }}' /><input type='number' class='item-qty' name='qty' value='{{ item.quantity }}' /><input type='submit' class='btn-update btn btn-link' value='Update item' style='display:none;'/></form></td>
-<td id='item-line-total-{{ item.item.id }}'>{{ item.line_item_total }}</td>
-<td class='text-right' ><a href='{{ item.remove }}'>X</a>
-
-
-
-</td>
-
-
-</tr>
-
-{% endfor %}
-
-
-<tr>
-	<td  colspan='4' class='text-right'>Subtotal: <span id='subtotal'>{{ object.subtotal }}</span></td>
-</tr>
-
-<tr>
-	<td colspan='4' class='text-right'>Tax (Estimated): <span id='taxtotal'>{{ object.tax_total }}</span></td>
-</tr>
-
-<tr>
-	<td colspan='4' class='text-right'>Total: <span id='carttotal'>{{ object.total }}</span></td>
-</tr>
-
-
-<tr>
-	<td colspan='4' class='text-right'><a class='btn btn-warning' href="{% url 'checkout' %}">Checkout </a></td>
-</tr>
-
-</table>
-
-
+    					</table>
+    				</div>
+    					<a class='btn btn-primary' href="{% url 'checkout' %}">Checkout </a>
+    			</div>
+    		</div>
+    	</div>
+    </div>
 </div>
 {% endif %}
 
-</div>
 {% endblock %}
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+    		<div class="invoice-title">
+    			<h2>Invoice</h2><h3 class="pull-right">Order # 12345</h3>
+    		</div>
+    		<hr>
+    		<div class="row">
+    			<div class="col-xs-6">
+    				<address>
+    				<strong>Billed To:</strong><br>
+    					John Smith<br>
+    					1234 Main<br>
+    					Apt. 4B<br>
+    					Springfield, ST 54321
+    				</address>
+    			</div>
+    			<div class="col-xs-6 text-right">
+    				<address>
+        			<strong>Shipped To:</strong><br>
+    					Jane Smith<br>
+    					1234 Main<br>
+    					Apt. 4B<br>
+    					Springfield, ST 54321
+    				</address>
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="col-xs-6">
+    				<address>
+    					<strong>Payment Method:</strong><br>
+    					Visa ending **** 4242<br>
+    					jsmith@email.com
+    				</address>
+    			</div>
+    			<div class="col-xs-6 text-right">
+    				<address>
+    					<strong>Order Date:</strong><br>
+    					March 7, 2014<br><br>
+    				</address>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>Order summary</strong></h3>
+    			</div>
+    			<div class="panel-body">
+    				<div class="table-responsive">
+    					<table class="table table-condensed">
+    						<thead>
+                                <tr>
+        							<td><strong>Item</strong></td>
+        							<td class="text-center"><strong>Price</strong></td>
+        							<td class="text-center"><strong>Quantity</strong></td>
+        							<td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+    						</thead>
+    						<tbody>
+    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
+    							<tr>
+    								<td>BS-200</td>
+    								<td class="text-center">$10.99</td>
+    								<td class="text-center">1</td>
+    								<td class="text-right">$10.99</td>
+    							</tr>
+                                <tr>
+        							<td>BS-400</td>
+    								<td class="text-center">$20.00</td>
+    								<td class="text-center">3</td>
+    								<td class="text-right">$60.00</td>
+    							</tr>
+                                <tr>
+            						<td>BS-1000</td>
+    								<td class="text-center">$600.00</td>
+    								<td class="text-center">1</td>
+    								<td class="text-right">$600.00</td>
+    							</tr>
+    							<tr>
+    								<td class="thick-line"></td>
+    								<td class="thick-line"></td>
+    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
+    								<td class="thick-line text-right">$670.99</td>
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Shipping</strong></td>
+    								<td class="no-line text-right">$15</td>
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Total</strong></td>
+    								<td class="no-line text-right">$685.99</td>
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>

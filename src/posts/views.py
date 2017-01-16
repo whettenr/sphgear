@@ -34,7 +34,6 @@ def post_create(request):
 		instance = form.save(commit=False)
 		instance.user = request.user
 		instance.save()
-		# message success
 		messages.success(request, "Successfully Created")
 		return HttpResponseRedirect(instance.get_absolute_url())
 	context = {
@@ -43,6 +42,7 @@ def post_create(request):
 	return render(request, "blog/post_form.html", context)
 
 def post_detail(request, slug=None):
+	today = timezone.now().date()
 	instance = get_object_or_404(Post, slug=slug)
 	if instance.publish > timezone.now().date() or instance.draft:
 		if not request.user.is_staff or not request.user.is_superuser:
@@ -51,7 +51,7 @@ def post_detail(request, slug=None):
 
 	initial_data = {
 			"content_type": instance.get_content_type,
-			"object_id": instance.id
+			"object_id": instance.id,
 	}
 	form = CommentForm(request.POST or None, initial=initial_data)
 	if form.is_valid() and request.user.is_authenticated():
@@ -88,6 +88,7 @@ def post_detail(request, slug=None):
 		"share_string": share_string,
 		"comments": comments,
 		"comment_form":form,
+		"today": today,
 	}
 	return render(request, "blog/post_detail.html", context)
 
