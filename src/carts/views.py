@@ -37,7 +37,7 @@ if settings.DEBUG:
 
 
 def find_user_cart_and_order(self):
-	user_carts = Cart.objects.filter(user=self.request.user).order_by('-timestamp')
+	user_carts = Cart.objects.filter(user=self.request.user).order_by('timestamp')
 	print user_carts
 	if user_carts:
 		for cart in user_carts:
@@ -200,11 +200,13 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 		new_order = self.get_order()
 		user_checkout_id = request.session.get("user_checkout_id")
 		if user_checkout_id != None:
+			print "user_checkout_id != None get"
 			user_checkout = UserCheckout.objects.get(id=user_checkout_id)
-			if new_order.shipping_address == None:
-			 	return redirect("order_address")
 			new_order.user = user_checkout
 			new_order.save()
+			if new_order.shipping_address == None:
+			 	return redirect("order_address")
+			
 		return get_data
 
 
@@ -227,6 +229,7 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 			pass
 
 		if user_check_id != None:
+			print "user_check_id != None: get context"
 			user_can_continue = True
 			if not self.request.user.is_authenticated(): #GUEST USER
 				user_checkout_2 = UserCheckout.objects.get(id=user_check_id)
@@ -248,7 +251,7 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 		
 		if coupon_form.is_valid():
 			if '_remove' in self.request.POST:
-				print "hi"
+				# print "hi"
 				order = self.get_order()
 				if order.coupon:
 					order.coupon = None
@@ -309,13 +312,14 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 
 class CheckoutFinalView(CartOrderMixin, View):
 	def post(self, request, *args, **kwargs):
-		if '_remove' in self.request.POST:
-			print 'hi'
-			return reverse("checkout")
+
 		order = self.get_order()
 		order_total = order.order_total
 		print "order total"
 		print order_total
+		print "im printing"
+		if '_remove' in self.request.POST:
+			print 'hi'
 		nonce = request.POST.get("payment_method_nonce")
 		if nonce:
 			result = braintree.Transaction.sale({
@@ -333,7 +337,7 @@ class CheckoutFinalView(CartOrderMixin, View):
 			if result.is_success:
 				# result.transaction.id to order
 				print order.user.email
-				template = get_template('orders/order_summary_short.html')
+				template = get_template('orders/order_view_email.html')
 				context = Context({
 					'order': order,
 				})

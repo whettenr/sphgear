@@ -6,27 +6,23 @@
 
 No Categories yet ...
 {% else %}
-<div class='row'>
-  <div class="card-deck-wrapper">
-  	<div class="card-deck">
-    {% for cat in object_list %}
-    {% if cat.active %}   
-		<div class="card">  
-			<div class="card-block">
-				<h4 class="card-title text-xs-center text-md-left align-text-top"><a href='{% url "category_detail" cat.slug %}'>
-				{{ cat.title }}</a></h4>
-    		{% if cat.description %}   
-					<p>{{ cat.description }}</p>
-				{% endif %}
-				<a class="btn btn-primary" href='{% url "category_detail" cat.slug %}'>
-				  View Products <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
-			</div>
-		</div>
-			{% endif %}
-    {% endfor %}
+
+<div class="row"> 
+{% for cat in object_list %}
+{% if cat.active %}
+<div class="col-sm-4 col-xs-12  catbox">
+    <h3>{{ cat.title }}</h4>
+    {% if cat.description %}   
+		<p>{{ cat.description }}</p>
+	{% endif %}
+    <div class="productprice">
+    	<a href='{% url "category_detail" cat.slug %}' class="btn btn-primary" role="button">View Products<i class="fa fa-chevron-right" aria-hidden="true"></i></a>
     </div>
-  </div>
 </div>
+{% endif %}
+{% endfor %}
+</div>
+
 
 {% endif %}
 

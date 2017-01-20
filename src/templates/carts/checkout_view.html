@@ -14,8 +14,6 @@ braintree.setup(clientToken, "dropin", {
   container: "payment-form"
 });
 
-
-
 {% endblock %}
 </script>
 
@@ -70,44 +68,51 @@ braintree.setup(clientToken, "dropin", {
 {% else %}
 
 {% include "orders/order_summary_short.html" with order=order %}
-
-
+<hr>
+  
 <div class="container form-container">
     <div class="row">
-        <div class="col-md-offset-1 col-md-5">
-            <div class="form-login">
-              <h4>Pay by card or PayPal</h4>
-              	<form id="checkout" method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
-      			<div style="background-color: white;" id="payment-form"></div>
-      			<br>
-      			<button class="btn btn-success" type='submit'>Complete Order</button>
-    				<input class="btn btn-danger" type="submit" value="Remove Payment Method" name='_remove' />
-      		  </form>
+      <div class="col-md-6">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-login">
+                <h4>Is this shipping address correct?</h4>
+                <address>
+                <strong>Shipping To:</strong><br>
+                  {{ order.shipping_address.street }}<br>
+                  {{ order.shipping_address.city }}, {{ order.shipping_address.state }}, 
+                  {{ order.shipping_address.country }}<br>
+                  {{ order.shipping_address.zipcode }}
+                </address>
+                <a class="btn btn-primary" href='{% url "order_address" %}'>Change an Address</a>
+              </div>
             </div>
-        </div>
 
-        <div class="col-md-5 pad">
-            <div class="form-login">
-              <h4>Got a Promo Code?</h4>
-              <form method="POST" action=''>{% csrf_token %}
-      			{{ coupon_form|crispy }}
-      			<input class="btn btn-primary" type="submit" value="Submit" name='_coupon' {% if order.coupon %}disabled{% endif %}/>
-    			<input class="btn btn-danger" type="submit" value="Remove" name='_remove' />
-      		  </form>
+            <div class="col-xs-12 all-pad">
+                <div class="form-login">
+                  <h4>Got a Promo Code?</h4>
+                  <form method="POST" action=''>{% csrf_token %}
+                {{ coupon_form|crispy }}
+                <input class="btn btn-primary" type="submit" value="Submit" name='_coupon' {% if order.coupon %}disabled{% endif %}/>
+              <input class="btn btn-danger" type="submit" value="Remove" name='_remove' />
+                </form>
+                </div>
             </div>
-        </div>
+          </div>
+      </div>
+        
+      <div class="col-md-6 pad">
+          <div class="form-login">
+            <h4>Pay by card or PayPal</h4>
+            	<form id="checkout" method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
+    			<div style="background-color: white;" id="payment-form"></div>
+    			<br>
+    			<button class="btn btn-success btn-lg btn-block" type='submit'>Complete Order of ${{ order.order_total }}</button>
+  				<input class="btn btn-danger btn-block" type="submit" value="Remove Payment Method" name='_remove' />
+    		  </form>
+          </div>
+      </div>     
     </div>
-</div>
-
-
-<div class="row">
-<div class='col-sm-6 offset-sm-3 text-center'>
-<p>
-	<a class="btn btn-primary" href='{% url "order_address" %}'>Change an Address</a>
-
-</p>
-<hr>
-</div>
 </div>
 
 {% endif %}

@@ -3,8 +3,8 @@
 
 {% block content %}
 
-<div class='col-sm-3'>
-<div class="search">
+<div class='col-xs-3'>
+<div class="advanced-search">
 	<form method="GET" action="{% url 'products' %}">
 	{{ filter_form|crispy }}
 	<!-- <input type='hidden' name='q' value='{{ request.GET.q }}' /> -->
@@ -12,11 +12,12 @@
 	<input type='submit' value='Apply Filter' class='btn btn-primary btn-block'>
 
 	</form>
+	<br>
 	<a class="btn btn-primary btn-block" href="{% url 'products' %}">Clear Filters</a>
 	</div>
 </div>
 
-<div class='col-sm-9'>
+<div class='col-sm-9 col-xs-12'>
 
 <h1>Products <small><a href='{% url "categories" %}'>(view Categories)</a></small></h1>
 
@@ -30,4 +31,33 @@ Nothing found
 
 </div>
 
+<a id="menu-toggle" href="#" class="btn btn-primary btn-lg toggle"><i class="fa fa-search" aria-hidden="true"></i> 
+Add/Clear Filters</a>
+<div id="sidebar-wrapper">
+    <div class="search">
+		<form method="GET" action="{% url 'products' %}">
+		{{ filter_form|crispy }}
+		<hr>
+		<input type='submit' value='Apply Filter' class='btn btn-primary btn-block btn-lg'>
+
+		</form>
+		<br>
+		<a class="btn btn-danger btn-block btn-lg" href="{% url 'products' %}">Clear Filters</a>
+		</div>
+	</div>
+</div>
+
 {% endblock %}
+
+
+<script>
+	{% block jquery%}
+	$("#menu-toggle").click(function(e) {
+		e.preventDefault();
+		$("#sidebar-wrapper").toggleClass("active");
+		$("#menu-toggle i").toggleClass("fa fa-search", "fa fa-search")
+		$("#menu-toggle i").toggleClass("fa fa-times", "fa fa-times")
+	});	
+	{% endblock %}
+</script>
+

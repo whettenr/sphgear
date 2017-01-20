@@ -53,7 +53,7 @@ class CartOrderMixin(object):
 			try:
 				shipping_price = ShippingCost.objects.get(name="default").price
 			except:
-				shipping_price = 30.00
+				shipping_price = 10.00
 			ship_location = ShippingCost.objects.filter(state=state)
 			if ship_location == None:
 				ship_location = ShippingCost.objects.filter(country=country)

@@ -1,18 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>{{ object }}</h3>
-
-<div class='row'>
-{% for product in products %}
-
-	<div class='col-xs-12'>
-		{% include "products/product_thumbnail.html" with product=product price=True %}
-	</div>
-	{% cycle '' '' '</div><div class="row">' %}
-
-{% endfor %}
-
-</div>
+<h2>{{ object.title }} <small><a href='{% url "categories" %}'>view all Categories</a></small></h2>
+{{ object.description }}
+<hr>
+{% include "products/products.html" with object_list=products price=True %}
 
 {% endblock %}

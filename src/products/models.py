@@ -1,5 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Max
+from django.db.models import Min
 from django.db.models.signals import post_save
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
@@ -26,9 +28,8 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-	title = models.CharField(max_length=120)
+	title = models.CharField(max_length=120, unique=True)
 	description = models.TextField(blank=True, null=True)
-	price = models.DecimalField(decimal_places=2, max_digits=20)
 	active = models.BooleanField(default=True)
 	categories = models.ManyToManyField('Category', blank=True)
 	default = models.ForeignKey('Category', related_name='default_category', null=True, blank=True)
@@ -46,22 +47,46 @@ class Product(models.Model):
 		return reverse("product_detail", kwargs={"pk": self.pk})
 
 	def get_image_url(self):
-		img = self.productimage_set.first()
+
+		try:
+			img = self.productfeaturedimage_set.first()
+		except:
+			pass
+		if not img:
+			var_set = self.variation_set.last()
+			img = self.variation_set.last().productimage_set.first()
+
 		if img:
 			return img.image.url
 		return img
 
 	def get_image_set(self):
-		img_set = self.productimage_set.all()
+		var_set = self.variation_set.all()
+		img_set = []
+		for var in var_set:
+			img_set += var.productimage_set.all()
+			print img_set
 		for img in img_set:
 			print img.image.url
+			print img.product_var
 		return img_set #None
+
+	def get_min_price(self):
+		var_set = self.variation_set.all()
+		min_price = var_set.aggregate(Min('price'))
+		min_sale = var_set.aggregate(Min('sale_price'))
+		if min_price['price__min'] < min_sale['sale_price__min']:
+			return var_set.get(price=min_price['price__min']).get_html_price()
+		else:
+			return var_set.get(sale_price=min_sale['sale_price__min']).get_html_price()
+
+
+
 
 
 
 class Variation(models.Model):
 	product = models.ForeignKey(Product)
-	title = models.CharField(max_length=120)
 	size = models.CharField(max_length=120)
 	color = models.CharField(max_length=120)
 	price = models.DecimalField(decimal_places=2, max_digits=20)
@@ -111,7 +136,7 @@ def product_post_saved_receiver(sender, instance, created, *args, **kwargs):
 		new_var.title = "Default"
 		new_var.size = "Default"
 		new_var.color = "Default"
-		new_var.price = product.price
+		new_var.price = 0.00
 		new_var.save()
 
 
@@ -119,7 +144,7 @@ post_save.connect(product_post_saved_receiver, sender=Product)
 
 
 def image_upload_to(instance, filename):
-	title = instance.product.title
+	title = instance.name + instance.product_var.get_title()
 	slug = slugify(title)
 	basename, file_extension = filename.split(".")
 	new_filename = "%s.%s" %(slug, file_extension)
@@ -127,11 +152,12 @@ def image_upload_to(instance, filename):
 
 
 class ProductImage(models.Model):
-	product = models.ForeignKey(Product)
+	name = models.CharField(max_length=120)
+	product_var = models.ForeignKey(Variation)
 	image = models.ImageField(upload_to=image_upload_to)
 
 	def __unicode__(self):
-		return self.product.title
+		return self.name
 
 
 # Product Category
@@ -163,7 +189,7 @@ def image_upload_to_featured(instance, filename):
 
 
 
-class ProductFeatured(models.Model):
+class ProductFeaturedImage(models.Model):
 	product = models.ForeignKey(Product, null=True, blank=True)
 	image = models.ImageField(upload_to=image_upload_to_featured)
 	title = models.CharField(max_length=120, unique=True)

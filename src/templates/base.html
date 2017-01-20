@@ -33,11 +33,13 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
     {% include 'navbar.html' %}
-    <!-- <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Library</a></li>
-      <li class="breadcrumb-item active float-xs-right"><a href="#">Data</a></li>
-    </ol> -->
+
+    <div class='container'>
+      <div class='alert alert-warning'>
+          <p>This is a test site</p>
+      </div>
+    </div>
+
     {% for message in messages %}
     <div class='container'>
       <div class='alert alert-{{ message.tags }} alert-dismissible'>
@@ -59,6 +61,7 @@
     </div> <!-- /container -->
   {% include "footer.html" %}
   {% include "javascript.html" %}
+
     
     <script>
     $(document).ready(function(){

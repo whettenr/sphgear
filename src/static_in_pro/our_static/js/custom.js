@@ -12,3 +12,4 @@ function showFlashMessage(message) {
 		$(".container-alert-flash").fadeOut();
 	}, 1800);
 }
+

@@ -1,23 +1,6 @@
-
-<!-- <div class='row'>
-<div class="card-deck-wrapper">
-	<div class="card-deck">
-
-{% for product in object_list %}
-	{% include "products/product_thumbnail.html" with product=product price="True" %}
-{% cycle '' '' '</div><div class="card-deck">' %}
-{% endfor %}
-</div>
-</div>
-</div> -->
-
-
 <div class='row'>
-  <div class='col-xs-12'>
-    <div class="card-columns">
     {% for product in object_list %}   
 		{% include "products/product_thumbnail.html" with product=product price="True" %}
+	{% cycle '' '' '' '</div><div class="row">' %}
     {% endfor %}
-    </div>
-  </div>
 </div>

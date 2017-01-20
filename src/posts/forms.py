@@ -10,9 +10,10 @@ class PostForm(forms.ModelForm):
     publish = forms.DateField(widget=SelectDateWidget(empty_label=("Choose Year", "Choose Month", "Choose Day"),
     ),)
     class Meta:
-        model = Post
-        fields = [
+		model = Post
+		fields = [
 			"title",
+			"slug",
 			"content",
 			"image",
 			"draft",

@@ -1,3 +1,4 @@
+
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
@@ -15,7 +16,7 @@
     			<div class="col-xs-6">
     				<address>
     				<strong>Shipping To:</strong><br>
-    					{% if order.user%}{{order.user.user}} | {% endif %}{{order.user}}<br>
+    					{% if order.user.user%}{{order.user.user}} | {% endif %}{{order.user}}<br>
     					{{ order.shipping_address.street }}<br>
     					{{ order.shipping_address.city }}, {{ order.shipping_address.state }}, 
     					{{ order.shipping_address.country }}<br>
@@ -38,45 +39,47 @@
     						<thead>
                                 <tr>
         							<td><strong>Item</strong></td>
-        							<td class="text-center"><strong>Price</strong></td>
         							<td class="text-center"><strong>Quantity</strong></td>
+                                    <td></td>
         							<td class="text-right"><strong>Totals</strong></td>
                                 </tr>
     						</thead>
     						<tbody>
-    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
     							{% for item in order.cart.cartitem_set.all %}
                                 <tr id='item-{{ item.item.id }}'>
                                     <td>{{ item.item.get_title }}</td>
-                                    <td class="text-center">{{item.item.get_html_price}}</td>
                                     <td class="text-center">{{ item.quantity }}</td>
-                                        <td class="text-right" id='item-line-total-{{ item.item.id }}'>{{ item.line_item_total }}</td>
+                                    <td></td>
+                                    <td class="text-right" id='item-line-total-{{ item.item.id }}'>{{ item.line_item_total }}</td>
                                 </tr>
                                 {% endfor %}
                                
     							<tr>
     								<td class="thick-line"></td>
-    								<td class="thick-line"></td>
-    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
+                                    <td class="thick-line"></td>
+    								<td class="thick-line text-right"><strong>Subtotal</strong></td>
     								<td class="thick-line text-right">${{ order.cart.total }}</td>
     							</tr>
 
                                 {% if order.coupon %}
                                     <tr>
                                         <td class="no-line"></td>
+                                        <!-- <td class="no-line"></td> -->
                                         <td class="no-line"></td>
-                                        <td class="no-line text-center" style="color: red"><strong>Coupon Used</strong></td> 
+                                        <td class="no-line text-right" style="color: red"><strong>Coupon Used</strong></td> 
                                         <td class="no-line text-right" style="color: red">{{ order.coupon.name }}</td>
                                     </tr>
                                         <tr>
                                             <td class="no-line"></td>
-                                            <td class="no-line"></td>
+                                            <!-- <td class="no-line"></td> -->
                                             {% if order.coupon.status != 'free shipping'%}
-                                            <td class="no-line text-center"><strong>Shipping</strong></td>
+                                            <td class="no-line"></td>
+                                            <td class="no-line text-right"><strong>Shipping</strong></td>
                                             <td class="no-line text-right">${{ order.shipping_price }}</td>
 
                                             {% else %}
-                                            <td class="no-line text-center" style="color: red"><strong>Shipping</strong></td>
+                                            <td></td>
+                                            <td class="no-line text-right" style="color: red"><strong>Shipping</strong></td>
                                             <td class="no-line text-right" style="color: red">$0.00</td>
                                             {% endif %}
                                         </tr>
@@ -84,7 +87,7 @@
                                         <tr>
                                             <td class="no-line"></td>
                                             <td class="no-line"></td>
-                                            <td class="no-line text-center" style="color: red"><strong>Total</strong></td>
+                                            <td class="no-line text-right" style="color: red"><strong>Total</strong></td>
                                             <td class="no-line text-right"> 
                                                 <em style="color: red">
                                                 {% if order.coupon.status == '%' %}
@@ -100,14 +103,15 @@
                                 
     							<tr>
     								<td class="no-line"></td>
-    								<td class="no-line"></td>
-    								<td class="no-line text-center"><strong>Shipping</strong></td>
+    								<!-- <td class="no-line"></td> -->
+                                    <td class="no-line"></td>
+    								<td class="no-line text-right"><strong>Shipping</strong></td>
     								<td class="no-line text-right">${{ order.shipping_price }}</td>
     							</tr>
     							<tr>
     								<td class="no-line"></td>
-    								<td class="no-line"></td>
-    								<td class="no-line text-center"><strong>Total</strong></td>
+                                    <td  class="no-line"></td>
+    								<td class="no-line text-right"><strong>Total</strong></td>
     								<td class="no-line text-right">${{ order.order_total }}</td>
     							</tr>
                                 {%endif%}

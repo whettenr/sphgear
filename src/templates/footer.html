@@ -1,47 +1,53 @@
-<footer class="text-muted footer">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12">
-        <ul class="nav navbar-nav">
-          <div class="row">
-            <div class=col-md-11>
-            <li class="nav-item"><a class="btn btn-secondary" href="{% url 'home' %}">Home</a></li>
-            <li class="nav-item"><a href="{% url 'contact' %}" class="btn btn-secondary">Contact</a></li>
-            <li class="nav-item"><a href="{% url 'about' %}" class="btn btn-secondary">About</a></li>
-            <li class="nav-item"><a href="{% url 'posts:list' %}" class="btn btn-secondary">Blog</a></li>
-            {% if request.user.is_staff %}
-            <li class="nav-item "><a href="{% url 'posts:create' %}" class="btn btn-outline-danger">Create Blog Post</a></li>
-             <li class="nav-item"><a href="{% url 'orders' %}" class="btn btn-outline-danger">All Orders</a></li>
+<footer>
+    <div class="footer" id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h3> SPH performance gear </h3>
+                    <ul>
+                        <li> <a href="{% url 'home' %}"> Home </a> </li>
+                        <li> <a href="{% url 'about' %}"> About </a> </li>
+                        <li> <a href="{% url 'contact' %}"> Contact </a> </li>
+                        <li> <a href="{% url 'products' %}"> Shop </a> </li>
+                        <li> <a href="{% url 'posts:list' %}"> Blog </a> </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h3><a href="http://schurigperformancehorses.com/">Who's Kyle Schurig?</a></h3>
+                    <ul>
+                        <li> <a href="http://schurigperformancehorses.com/"> Kyle's Website </a> </li>
+                        <li> <a href="http://schurigperformancehorses.com/contact/"> Contact Kyle </a> </li>
+                        <li> <a href="http://www.schurigperformancehorses.com/horses/">Horses</a> </li>
+                        <li> <a href="http://www.schurigperformancehorses.com/events/">Events</a> </li>
+                        <li> <a href="http://schurigperformancehorses.com/services/"> Services </a> </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h3> Follow Us! </h3>
+                        <div class="fb-like" data-href="https://www.facebook.com/SPHGear2015/" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
+                        <br>
+                        <a href="https://www.instagram.com/sphgear/?ref=badge"><i class="fa fa-instagram fa-2x"></i></a>
+                        
+                </div>
             </div>
-            {% endif %}
-            {% if request.user.is_staff %}
-            <div class=col-md-1>
-             
+            <!--/.row--> 
+        </div>
+        <!--/.container--> 
+    </div>
+    <!--/.footer-->
+    
+    <div class="footer-bottom">
+        <div class="container">
+            <p class="pull-left"> Copyright &copy; SPH Performance Gear </p>
+            <div class="pull-right">
+                <ul class="nav nav-pills payments">
+                  <li><i class="fa fa-cc-visa"></i></li>
+                    <li><i class="fa fa-cc-mastercard"></i></li>
+                    <li><i class="fa fa-cc-amex"></i></li>
+                    <li><i class="fa fa-cc-paypal"></i></li>
+                </ul> 
             </div>
-            {% endif %}
-          </div>
-        </ul>
-      </div>   
+        </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="fb-like text-xs-left" data-href="https://www.facebook.com/SPHGear2015/" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      
-      <div class="col-xs-2">
-        <p class="text-xs-left text-xs-center"> &copy; SPH Gear</p>
-      </div>
-      <div class="col-xs-10">
-        <p class="text-xs-right text-xs-center">Curious about Kyle Schurig? <a href="http://www.schurigperformancehorses.com/">Visit Kyle's homepage</a> or checkout our 
-        <a href="http://www.schurigperformancehorses.com/horses/">horses</a> and upcoming 
-        <a href="http://www.schurigperformancehorses.com/events/">events</a>.</p>
-      </div>
-      
-    </div>
-  </div>
+    <!--/.footer-bottom--> 
 </footer>
-

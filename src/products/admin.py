@@ -2,23 +2,25 @@ from django.contrib import admin
 from django.db import models
 from pagedown.widgets import AdminPagedownWidget
 
-from .models import Product, Variation, ProductImage, Category, ProductFeatured
+from .models import Product, Variation, ProductImage, Category, ProductFeaturedImage
 
-class ProductImageInline(admin.TabularInline):
-	model = ProductImage
-	extra = 0
-	max_num = 10
+# class ProductVariationImageInline(admin.TabularInline):
+# 	model = ProductVariationImage
+# 	extra = 0
+# 	max_num = 10
 
 class VariationInline(admin.TabularInline):
 	model = Variation
 	extra = 0
 	max_num = 10
 
+class ProductImageAdmin(admin.ModelAdmin):
+	list_display = ['__unicode__', 'product_var']
+
 
 class ProductAdmin(admin.ModelAdmin):
-	list_display = ['__unicode__', 'price']
+	list_display = ['__unicode__', 'weight']
 	inlines = [
-		ProductImageInline,
 		VariationInline,
 	]
 	formfield_overrides = {
@@ -29,7 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 admin.site.register(Product, ProductAdmin)
 
-# admin.site.register(Variation)
-admin.site.register(ProductImage)
+#admin.site.register(Variation)
+admin.site.register(ProductImage, ProductImageAdmin)
 admin.site.register(Category)
-admin.site.register(ProductFeatured)
+admin.site.register(ProductFeaturedImage)

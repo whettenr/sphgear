@@ -204,14 +204,14 @@ def order_post_save(sender, instance, *args, **kwargs):
 		order = instance
 		print "shipped!"
 		print order.user.email
-		template = get_template('orders/order_summary_short.html')
+		template = get_template('orders/order_view_email.html')
 		context = Context({
 			'order': order,
 		})
 		content = template.render(context)
 
 		email = EmailMessage(
-			order.user.email +"'s Order Summary",
+			order.user.email +"'s Order Summary" + " status",
 			content,
 			settings.EMAIL_MAIN,
 			[order.user.email, 'rmw95@txstate.edu'],
