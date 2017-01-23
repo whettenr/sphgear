@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from pagedown.widgets import AdminPagedownWidget
 
-from .models import Product, Variation, ProductImage, Category, ProductFeaturedImage
+from .models import Product, Variation, ProductImage, Category
 
 # class ProductVariationImageInline(admin.TabularInline):
 # 	model = ProductVariationImage
@@ -34,4 +34,3 @@ admin.site.register(Product, ProductAdmin)
 #admin.site.register(Variation)
 admin.site.register(ProductImage, ProductImageAdmin)
 admin.site.register(Category)
-admin.site.register(ProductFeaturedImage)

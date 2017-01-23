@@ -1,7 +1,10 @@
 body {
   padding-top: 70px;
   font-family: 'Open Sans', sans-serif;
-  min-height: 500px;
+}
+
+.main {
+  min-height: 490px;
 }
 
 
@@ -40,7 +43,6 @@ body {
   padding: 40px 0 10px;
   text-transform: uppercase;
 }
-
 footer .fa-instagram {
   width:150px;
   border-radius: 5px;
@@ -49,7 +51,6 @@ footer .fa-instagram {
   height: 30px;
   margin-top:5px;
 }
-
 .footer ul {
   font-size: 13px;
   list-style-type: none;
@@ -73,36 +74,6 @@ footer .fa-instagram {
   margin-bottom: 0 !important;
   padding-bottom: 0;
 }
-.newsletter-box input#appendedInputButton {
-  background: #FFFFFF;
-  display: inline-block;
-  float: left;
-  height: 30px;
-  clear: both;
-  width: 100%;
-}
-.newsletter-box .btn {
-  border: medium none;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  -ms-border-radius: 3px;
-  border-radius: 3px;
-  display: inline-block;
-  height: 40px;
-  padding: 0;
-  width: 100%;
-  color: #fff;
-}
-.newsletter-box {
-  overflow: hidden;
-}
-.bg-gray {
-  background-image: -moz-linear-gradient(center bottom, #BBBBBB 0%, #F0F0F0 100%);
-  box-shadow: 0 1px 0 #B4B3B3;
-}
-
-
 
 .footer-bottom {
   background: #E3E3E3;
@@ -116,26 +87,7 @@ footer .fa-instagram {
 .payments {
   font-size: 1.5em; 
 }
-
-
-/* ----- Nav bar ----- */
-
-
-
-
-
-/* ----- Nav bar ----- */
-
-.wmd-panel{
-    margin-right: 0px !important;
-    margin-left: 0px !important;
-}
-
-
-
-.comment-reply{
-    display:none;
-}
+/*----------------------*/
 
 .og-price {
 	color:red;
@@ -159,7 +111,6 @@ footer .fa-instagram {
 
 
 
-
 /* Makes images fully responsive */
 .img-responsive,
 .thumbnail > img,
@@ -173,6 +124,9 @@ footer .fa-instagram {
 
 
 /* ------------------- Product search/filter ------------------- */
+.search {
+  padding: 10px;
+}
 
 #sidebar-wrapper {
   margin-left: -250px;
@@ -212,11 +166,9 @@ footer .fa-instagram {
 }
 
 @media screen and (min-width: 768px) {
-
   #menu-toggle {
     display: none;
   }
-
 }
 
 @media screen and (max-width: 768px) {
@@ -267,72 +219,16 @@ footer .fa-instagram {
   font-size:1.4em;
 }
 
-/* ------------------- Carousel Styling ------------------- */
-
-.carousel-caption {
-  background-color: rgba(0,0,0,.5);
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 100;
-  padding: 10px 0 10px 25px;
-  color: #fff;
-  text-align: left;
-}
-
-.carousel-indicators {
-  position: absolute;
-  bottom: 0;
-  right:0;
-  z-index: 15;
-  margin: 0;
-  padding: 0 25px 25px 0;
-  text-align: right;
-}
-
-.carousel-control.left,
-.carousel-control.right {
-  background-image: none;
-  width:3%;
-}
-
-.section-white {
-   padding: 10px 0;
-}
-
-.section-white {
-  background-color: #fff;
-  color: #555;
-}
-
-@media screen and (min-width: 768px) {
-
-  .section-white {
-     padding: 1.5em 0;
-  }
-
-}
-
-/*@media screen and (min-width: 992px) {
-
-  .container {
-    max-width: 1000px;
-  }
-
-}*/
-
-.colorgraph {
-  height: 5px;
-  border-top: 0;
-  background: #c4e17f;
-  border-radius: 5px;
- 
-}
 
 /* ------------------- Regitration/Login/Reset forms ------------------- */
 
-
+.face-nav-p {
+  display: inline;
+  vertical-align: middle;
+}
+.face-nav-fa {
+  vertical-align: middle;
+}
 .form-container {
     padding: 25px;
 }
@@ -380,6 +276,7 @@ h4 {
 }
 
 /* ------------------- Cart/Order Tables ------------------- */
+
 .invoice-title h2, .invoice-title h5 {
     display: inline-block;
 }
@@ -398,7 +295,9 @@ h4 {
 
 
 /* ------------------- Blog style ------------------- */
-
+.comment-reply {
+    display:none;
+}
 .blog-detail {
     background-color: #EDEDED;
     padding-top: 10px;
@@ -411,7 +310,7 @@ h4 {
     box-shadow:0 1px 0 #cfcfcf;
 }
 
-.blog-detail > .post-detail-item, .comment-well {
+.blog-detail > .post-detail-item {
   background-color: white;
   padding-top: 10px;
   padding-bottom: 20px;
@@ -481,9 +380,6 @@ h4 {
 .fa-reddit {
   background: #ff4500;
 }
-
-
-
 
 
 
@@ -623,7 +519,6 @@ h4 {
     -webkit-transform: scale(1);
             transform: scale(1); } }
 
-/*# sourceMappingURL=style.css.map */
 
 #socialHolder {
   position: fixed;
@@ -735,4 +630,104 @@ h4 {
         margin-right:5px;
     }
 }
+
+/*colors*/
+
+/*navbar*/
+/*.navbar-inverse, .navbar-brand {
+  background-color: #084b53;
+  color: #e6ebef !important;
+  border:none;
+}
+.navbar-inverse .navbar-nav>li>a {
+  color: #e6ebef !important;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+  color: #000 !important;
+  background-color: #fff !important;
+}
+
+.navbar-inverse .navbar-nav>.active>a, 
+.navbar-inverse .navbar-nav>.active>a:focus, 
+.navbar-inverse .navbar-nav>.active>a:hover {
+  color: #000 !important;
+  background-color: #fff !important;*/
+}
+/*btns*/
+/*.btn-primary {
+  background-color: #8b7c65;
+  border: #8b7c65;
+}
+
+.btn-primary:hover {
+  background-color: #84a5af;
+  border: #84a5af;
+}
+.btn-danger {
+ background-color: #891b5a;
+ border:#891b5a;
+}
+
+.btn-success {
+  background-color: #084b53;
+  border: #084b53;
+}
+
+.btn-success:hover {
+  background-color: #84a5a9;
+  border: #84a5a9;
+}
+
+#menu-toggle {
+  background-color: #5c4e41;
+}
+#menu-toggle:hover {
+  background-color: #8b7c65;
+}
+
+
+#sidebar-wrapper {
+  background: #d3d7e2;
+}
+
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover {
+  background-color: #8b7c65;
+  border: #084b53;
+}*/
+
+
+/*footer*/
+
+.footer {
+  background: #84a5a9;
+  border-bottom: 1px solid #084b53;
+  border-top: 1px solid #064951;
+}
+.footer h3 {
+  border-bottom: 1px solid #084b53;
+  color: #084b53;
+}
+.footer ul {
+  color: #084b53;
+}
+.footer ul li a {
+  color: #084b53
+}
+.footer h3 a {
+  color: #084b53;
+}
+
+.footer-bottom {
+  background: #084b53;
+  border-top: 1px solid #084b53;
+  color:#84a5a9;
+}
+
+
 

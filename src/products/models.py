@@ -47,15 +47,7 @@ class Product(models.Model):
 		return reverse("product_detail", kwargs={"pk": self.pk})
 
 	def get_image_url(self):
-
-		try:
-			img = self.productfeaturedimage_set.first()
-		except:
-			pass
-		if not img:
-			var_set = self.variation_set.last()
-			img = self.variation_set.last().productimage_set.first()
-
+		img = self.variation_set.last().productimage_set.first()
 		if img:
 			return img.image.url
 		return img
@@ -186,19 +178,4 @@ def image_upload_to_featured(instance, filename):
 	new_filename = "%s-%s.%s" %(slug, instance.id, file_extension)
 	return "products/%s/featured/%s" %(slug, new_filename)
 
-
-
-
-class ProductFeaturedImage(models.Model):
-	product = models.ForeignKey(Product, null=True, blank=True)
-	image = models.ImageField(upload_to=image_upload_to_featured)
-	title = models.CharField(max_length=120, unique=True)
-	text = models.CharField(max_length=220, null=True, blank=True)
-	text_right = models.BooleanField(default=False)
-	text_css_color = models.CharField(max_length=6, null=True, blank=True)
-	make_image_background = models.BooleanField(default=False)
-	active = models.BooleanField(default=True)
-
-	def __unicode__(self):
-		return self.title
 

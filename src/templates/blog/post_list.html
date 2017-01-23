@@ -15,7 +15,6 @@
       <div class='input-group'>
         <input class='form-control' type='text' name='q' placeholder='Search posts' value='{{ request.GET.q }}'/>
         <span class='input-group-btn'>
-          <!-- <input class='btn btn-default' type='submit' value='Search' /> -->
           <button class='btn btn-primary' type='submit'>Search <i class="fa fa-search"></i></button>
         </span>
       </div>
@@ -62,7 +61,7 @@
   </div>
   {% if obj.image %}
   <div class="text-xs-center">
-    <img src='{{ obj.image.url }}' class='img-responsive text-xs-center' />
+    <img src='{{ obj.image.url }}' class='img-responsive text-center' />
   </div>
   {% endif %}
   <div class="panel-body">

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load urlify %}
 {% load crispy_forms_tags %}
+{% load markdown_deux_tags %}
 
 {% block head_title %}
 {{ instance.title }} | {{ block.super }}
@@ -9,120 +10,117 @@
 {% block content %}
 
 
-<div class='blog-detail'>
-  <!-- Title -->
-  <h1>{{ title }}</h1>
-  <p class="read-time">(Read time: {% if instance.read_time <= 1 %} < 1 Minute {% else %}{{ instance.read_time }} minutes {% endif %})</p>
-  <!-- Author -->
-  <p class="">Posted by <b>{{ instance.user }}</b>
-     on {{ instance.publish }} 
-    <small>({{ instance.publish|timesince }} ago)</small>
-    {% if request.user.is_staff %}
-      {% if instance.draft %}
-        |<em style="color:red"> Draft</em>
-      {% endif %} 
-      {% if instance.publish > today %}
-        |<em style="color:red"> Future Post</em>
-      {% endif %}
-    {% endif %}
-  </p>
 
 
+
+ <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1><a href="">{{title}}</a></h1>
   
+                <p class="lead"><i class="fa fa-user"></i> by {{instance.user}}</a>
+                </p>
+                <hr>
+                <p><i class="fa fa-calendar"></i> Posted on {{instance.publish}}</p>
+                <hr>
+                {% if instance.image %}
+                  <img src='{{ instance.image.url }}' class='img-responsive'>
+                {% endif %}
+                <hr>
+                <div class='post-detail-item content-markdown'>{{ instance.content }}</div>
 
+                <br/>
+                <hr>
 
-  <!-- Post Pic -->
-  {% if instance.image %}
-    <img src='{{ instance.image.url }}' class='img-responsive'>
-    <hr>
-  {% endif %}
+                <!-- the comment box -->
 
+                <div class="well">
+                    <h4><i class="fa fa-paper-plane-o"></i> Leave a Comment:</h4>
+                    {% if request.user.is_authenticated %}
+                    <form method="POST" action="."> {% csrf_token %}
+                        {{ comment_form|crispy }}
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-reply"></i> Submit</button>
+                    </form>
+                    {% else %}
+                      <p>You must login to comment </p>
+                    {% endif %}
+                </div>
+                <hr>
 
-  <!-- Post Content -->
-  <div class='post-detail-item'>{{ instance.get_markdown }}</div>
-  <br>
-  <ul class="social">
-    <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"><i class="fa fa-facebook"></i></a></li>
-    <li><a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}."><i class="fa fa-reddit"></i></a></li>
-    <li><a href="https://plus.google.com/share?url={{ request.build_absolute_uri }}/"><i class="fa fa-google-plus"></i> </a></li>
-    <li><a href="http://www.pinterest.com/pin/create/button/"><i class="fa fa-pinterest-p"></i></a></li>
-  </ul>
-  {% if request.user.is_staff %}
+                <!-- the comments -->
+                {% for comment in comments %}
+                <div class="comment-well">
+                <blockquote class="blockquote">
+                  <p>{{ comment.content }}</p>
+                    <footer class="blockquote-footer">via {{ comment.user }} | {{ comment.timestamp|timesince }} ago | {% if comment.children.count > 0 %}{{ comment.children.count }} <a class='comment-btn' href='#'>Comment{% if comment.children.count > 1 %}s{% endif %}</a> | {% endif %} <a class='comment-btn' href='#'>Reply</a> | <a class='' href='{{ comment.get_absolute_url }}'>Thread</a></footer>
+                    <div class='comment-reply'>
+                      {% for child_comment in comment.children %}
+                        <blockquote class="blockquote">
+                        <p>{{ child_comment.content }}</p>
+                        <footer class="blockquote-footer">via {{ child_comment.user }} | {{ child_comment.timestamp|timesince }} ago</footer>
+                        </blockquote>
+                      {% endfor %}
+                      {% if request.user.is_authenticated %}
+                        <form method="POST" action="."> {% csrf_token %}
+                            {{ comment_form|crispy }}
+                            <input type='hidden' name='parent_id' value='{{ comment.id }}'>
+                            <input type='submit' value='Reply' class='btn btn-default'>
+                        </form>
+                      {% else %}
+                        <p>You must login to comment </p>
+                      {% endif %}
+                    </div>
+                </blockquote>
+                </div>
+               <br>
+                {% endfor %}
+            </div>
 
-  <a class="btn btn-danger text-right" href="{% url 'posts:update' instance.slug %}" role="button">Edit Post</a>
-  <a class="btn btn-danger text-right" href="{% url 'posts:delete' instance.slug %}" role="button">Delete Post</a>
-  {% endif %}
+            <div class="col-md-4">
+                <div class="well">
+                  <h4><i class="fa fa-search"></i> Blog Search</h4>
+                  <form method='GET' action="{% url 'posts:list' %}" class='row'>
+                  <div class="input-group">
+                          <input class='form-control' type='text' name='q' placeholder='Search posts' value='{{ request.GET.q }}'/>                      
+                          <span class="input-group-btn">
+                          <button class="btn btn-default" type="button">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </span>
+                  </div>
+                  </form>
+                </div>
 
-</div>
-
-<br>
-
-<div class="blog-detail">
-    <p class='lead'>Comments</p>
-    {% if request.user.is_authenticated %}
-      <form method="POST" action="."> {% csrf_token %}
-          {{ comment_form|crispy }}
-          <input type='submit' value='Post comment' class='btn btn-primary'>
-      </form>
-      <br>
-      <p class='preview-content'></p>
-      {% else %}
-      <p>You must login to comment </p>
-      {% endif %}
-    {% for comment in comments %}
-    <div class="comment-well">
-    <blockquote class="blockquote">
-      <p>{{ comment.content }}</p>
-      <footer class="blockquote-footer">via {{ comment.user }} | {{ comment.timestamp|timesince }} ago | {% if comment.children.count > 0 %}{{ comment.children.count }} <a class='comment-reply-btn' href='#'>Comment{% if comment.children.count > 1 %}s{% endif %}</a> | {% endif %} <a class='comment-reply-btn' href='#'>Reply</a> | <a class='' href='{{ comment.get_absolute_url }}'>Thread</a></footer>
-        
-
-      <div class='comment-reply'>
-        {% for child_comment in comment.children %}
-          <blockquote class="blockquote">
-          <p>{{ child_comment.content }}</p>
-          <footer class="blockquote-footer">via {{ child_comment.user }} | {{ child_comment.timestamp|timesince }} ago</footer>
-          </blockquote>
-        {% endfor %}
-       
-          <form method="POST" action="."> {% csrf_token %}
-              {{ comment_form|crispy }}
-              <input type='hidden' name='parent_id' value='{{ comment.id }}'>
-              <input type='submit' value='Reply' class='btn btn-default'>
-          </form>
-          <p class='preview-content'></p>
-       
-          <p>You must login to comment </p>
-       
-    </div>
-
-    </blockquote>
-
-    </div>
-    <br>
-    {% endfor %}
-</div>
-
-
+                <div class="well">
+                  <h4><i class="fa fa-share-alt"></i> Share this post!</h4>
+                  <ul class="social">
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}."><i class="fa fa-reddit"></i></a></li>
+                    <li><a href="https://plus.google.com/share?url={{ request.build_absolute_uri }}/"><i class="fa fa-google-plus"></i> </a></li>
+                    <li><a href="http://www.pinterest.com/pin/create/button/"><i class="fa fa-pinterest-p"></i></a></li>
+                  </ul>
+                  {% if request.user.is_staff %}
+                  <a class="btn btn-danger text-right" href="{% url 'posts:update' instance.slug %}" role="button">Edit Post</a>
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
 
 {% endblock content %}
 
 <script>
 {% block jquery %}
-
-  var contentInput = $("#id_content");
-
-  function setContent(value){
-      var markedContent = marked(value)
-      $(".preview-content").html("<code>comment preview</code><br>" + markedContent)
-  }
-  setContent(contentInput.val())
-
-  contentInput.keyup(function(){
-      var newContent = $(this).val()
-      setContent(newContent)
+  $(".content-markdown").each(function(){
+      var content = $(this).text()
+      var markedContent = marked(content)
+      $(this).html(markedContent)
+  })
+  $(".post-detail-item img").each(function(){
+      $(this).addClass("img-responsive");
   })
 
-  $(".comment-reply-btn").click(function(event){
+  $(".comment-btn").click(function(event){
       event.preventDefault();
       $(this).parent().next(".comment-reply").fadeToggle();
   })

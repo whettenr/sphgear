@@ -40,7 +40,7 @@ Edit|{{ instance.title }} | {{ block.super }}
 	    $(this).html(markedContent)
 	})
 	$(".post-detail-item img").each(function(){
-	    $(this).addClass("img-fluid");
+	    $(this).addClass("img-responsive");
 	})
 
 
@@ -50,7 +50,7 @@ Edit|{{ instance.title }} | {{ block.super }}
 	    var markedContent = marked(value)
 	    $("#preview-content").html(markedContent)
 	    $("#preview-content img").each(function(){
-	        $(this).addClass("img-fluid")
+	        $(this).addClass("img-responsive")
 	    })
 	}
 	setContent(contentInput.val())

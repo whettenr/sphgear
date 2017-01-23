@@ -1,6 +1,129 @@
 {% extends "base.html" %}
 
-</style>
+{% block content %}
+<div class="container-fliud">
+	<div class="wrapper row">
+	{% if images %}
+	<div class="col-sm-6">
+		<div class="preview form-login">
+			<div class="preview-pic tab-content">
+			  {% for img in images %}
+			  <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="pic-{{forloop.counter}}">
+			  	<img class="img-responsive img-rounded" src="{{img.image.url}}" />
+			  </div>
+			  {% endfor %}
+			</div>
+
+			<ul class="preview-thumbnail nav nav-tabs">
+			  {% for img in images %}
+			  <li class="{% if forloop.counter == 1 %}active{% endif %}" id="thumbnail-{{forloop.counter}}">
+			    <a data-target="#pic-{{forloop.counter}}" data-toggle="tab">
+			      <img class="img-responsive img-rounded" src="{{img.image.url}}" />
+			    </a>
+			  </li>
+			  {% endfor %}
+			</ul>
+		</div>
+		</div>
+		{% endif %}
+
+		<div class="details col-sm-6">
+			<div class="form-login">
+			<h3 class="product-title">{{ object.title }}</h3>
+			<p class="product-description content-markdown">{{ object.description }}</p>
+			<form id='add-cart-form' class="form-horizontal" method='GET' action="{% url 'cart' %}">
+				<p id='jquery-message' class='lead'></p>
+				<h4 id='price' class="price">Price: ${{ object.variation_set.first.price }}</h4>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">Size</div>
+						<div class="col-sm-10">
+							<select name='size' class='form-control size-select'>
+								{% for size in sizes %}
+								<option  data-size="{{ size.size }}" value="{{size.size}}">
+									{{ size.size }} 
+								</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">Color</div>
+						<div class="col-sm-10">
+							<select name='color' class='form-control color-select'>
+								{% for color in colors %}
+									<option  data-color="{{color.color}}" value="{{color.color}}">
+										{{ color.color }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">Quantity</div>
+						<div class="col-sm-10">
+							<input class='form-control' type='number' name='qty' id='qty' value='1' />
+						</div>
+					</div>
+					<input id='cart-btn' type='submit' value='Add to Cart' class='btn btn-primary btn-lg' />
+				</form>
+				</div>
+
+		</div>
+	</div>
+	{% if request.user.is_staff %}
+		<br>
+		<a href="{% url 'product_inventory' pk=object.pk %}" class="btn btn-lg btn-danger">View inventory</a>
+	{% endif %}
+</div>
+<br>
+
+<div id="socialHolder" class="">
+		<div id="socialShare" class="btn-group">
+		<a data-toggle="dropdown" class="btn btn-primary">
+		<i class="fa fa-share-alt fa-inverse"></i>
+		</a>
+		<button href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle share">
+		<span class="caret"></span>
+		</button>
+		
+		<ul class="dropdown-menu">
+			
+			<li>
+				<a data-original-title="Facebook" rel="tooltip"   href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-facebook" data-placement="left">
+				<i class="fa fa-facebook"></i>
+				</a>
+			</li>					
+			<li>
+				<a data-original-title="Google+" rel="tooltip"  href="https://plus.google.com/share?url={{ request.build_absolute_uri }}/" class="btn btn-google" data-placement="left">
+				<i class="fa fa-google-plus"></i>
+				</a>
+			</li>
+			<li>
+				<a data-original-title="Reddit" rel="tooltip"  href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ object.title }}." class="btn btn-reddit" data-placement="left">
+				<i class="fa fa-reddit"></i>
+				</a>
+			</li>
+			<li>
+				<a data-original-title="Pinterest" rel="tooltip" href="http://www.pinterest.com/pin/create/button/" class="btn btn-pinterest" data-placement="left">
+				<i class="fa fa-pinterest"></i>
+				</a>
+			</li>
+			<li>
+				<a  data-original-title="Email" rel="tooltip"  href="mailto:?subject=look at this 
+				{{object.title}}&body= Check it out at {{ request.build_absolute_uri }}" class="btn btn-mail" data-placement="left">
+				<i class="fa fa-envelope"></i>
+				</a>
+			</li>
+		
+		</ul>
+		
+		</div>
+</div>
+
+{% endblock %}
+
+
+
 <script>
 {% block jquery %}
 
@@ -135,139 +258,25 @@ $("#cart-btn").click(function(event){
 {% for img in images %}
 $("#thumbnail-{{forloop.counter}}").click(function(event){
 	event.preventDefault();
-
-	console.log("{{img.product_var}}")
-	console.log("{{img.product_var.color}}")
-	
 	$(".color-select").val("{{img.product_var.color}}");
 	$(".size-select").val("{{img.product_var.size}}");
+	setPrice()
 })
 
 {% endfor %}
 
+$(".content-markdown").each(function(){
+      var content = $(this).text()
+      var markedContent = marked(content)
+      $(this).html(markedContent)
+  })
+  $(".post-detail-item img").each(function(){
+      $(this).addClass("img-responsive");
+  })
 
+  $(".comment-btn").click(function(event){
+      event.preventDefault();
+      $(this).parent().next(".comment-reply").fadeToggle();
+  })
 {% endblock %}
 </script>
-
-
-{% block content %}
-<div class="container-fliud">
-	<div class="wrapper row">
-	{% if images %}
-	<div class="col-sm-6">
-		<div class="preview form-login">
-			<div class="preview-pic tab-content">
-			  {% for img in images %}
-			  <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="pic-{{forloop.counter}}">
-			  	<img class="img-responsive img-rounded" src="{{img.image.url}}" />
-			  </div>
-			  {% endfor %}
-			</div>
-
-			<ul class="preview-thumbnail nav nav-tabs">
-			  {% for img in images %}
-			  <li class="{% if forloop.counter == 1 %}active{% endif %}" id="thumbnail-{{forloop.counter}}">
-			    <a data-target="#pic-{{forloop.counter}}" data-toggle="tab">
-			      <img class="img-responsive img-rounded" src="{{img.image.url}}" />
-			    </a>
-			  </li>
-			  {% endfor %}
-			</ul>
-		</div>
-		</div>
-		{% endif %}
-
-		<div class="details col-sm-6">
-			<div class="form-login">
-			<h3 class="product-title">{{ object.title }}</h3>
-			<p class="product-description">{{ object.description }}</p>
-			<form id='add-cart-form' class="form-horizontal" method='GET' action="{% url 'cart' %}">
-				<p id='jquery-message' class='lead'></p>
-				<h4 id='price' class="price">Price: ${{ object.variation_set.first.price }}</h4>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">Size</div>
-						<div class="col-sm-10">
-							<select name='size' class='form-control size-select'>
-								{% for size in sizes %}
-								<option  data-size="{{ size.size }}" value="{{size.size}}">
-									{{ size.size }} 
-								</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">Color</div>
-						<div class="col-sm-10">
-							<select name='color' class='form-control color-select'>
-								{% for color in colors %}
-									<option  data-color="{{color.color}}" value="{{color.color}}">
-										{{ color.color }}
-									</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">Quantity</div>
-						<div class="col-sm-10">
-							<input class='form-control' type='number' name='qty' id='qty' value='1' />
-						</div>
-					</div>
-					<input id='cart-btn' type='submit' value='Add to Cart' class='btn btn-primary btn-lg' />
-				</form>
-				</div>
-
-		</div>
-	</div>
-	{% if request.user.is_staff %}
-		<br>
-		<a href="{% url 'product_inventory' pk=object.pk %}" class="btn btn-lg btn-danger">View inventory</a>
-	{% endif %}
-</div>
-<br>
-
-<div id="socialHolder" class="">
-		<div id="socialShare" class="btn-group">
-		<a data-toggle="dropdown" class="btn btn-primary">
-		<i class="fa fa-share-alt fa-inverse"></i>
-		</a>
-		<button href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle share">
-		<span class="caret"></span>
-		</button>
-		
-		<ul class="dropdown-menu">
-			
-			<li>
-				<a data-original-title="Facebook" rel="tooltip"   href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-facebook" data-placement="left">
-				<i class="fa fa-facebook"></i>
-				</a>
-			</li>					
-			<li>
-				<a data-original-title="Google+" rel="tooltip"  href="https://plus.google.com/share?url={{ request.build_absolute_uri }}/" class="btn btn-google" data-placement="left">
-				<i class="fa fa-google-plus"></i>
-				</a>
-			</li>
-			<li>
-				<a data-original-title="Reddit" rel="tooltip"  href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ object.title }}." class="btn btn-reddit" data-placement="left">
-				<i class="fa fa-reddit"></i>
-				</a>
-			</li>
-			<li>
-				<a data-original-title="Pinterest" rel="tooltip" href="http://www.pinterest.com/pin/create/button/" class="btn btn-pinterest" data-placement="left">
-				<i class="fa fa-pinterest"></i>
-				</a>
-			</li>
-			<li>
-				<a  data-original-title="Email" rel="tooltip"  href="mailto:?subject=look at this 
-				{{object.title}}&body= Check it out at {{ request.build_absolute_uri }}" class="btn btn-mail" data-placement="left">
-				<i class="fa fa-envelope"></i>
-				</a>
-			</li>
-		
-		</ul>
-		
-		</div>
-</div>
-
-{% endblock %}

@@ -7,20 +7,21 @@ from django.template import Context
 from django.template.loader import get_template
 from django.shortcuts import render
 
-from products.models import ProductFeaturedImage, Product
+from products.models import Product
 from posts.models import Post
-from .models import CompanyInfo
+from .models import CompanyInfo, Featured
 from .forms import ContactForm
 
 # Create your views here.
 def home(request):
-	featured_images = ProductFeaturedImage.objects.filter(active=True).order_by("?")	
+	featured_images = Featured.objects.filter(active=True).order_by("?")	
 	count = featured_images.count()
 	posts = Post.objects.active()[:3]
 	# if request.user.is_staff or request.user.is_superuser:
 	# 	posts = Post.objects.all()[:3]
-	products = Product.objects.all().order_by("?")[:4]
-	
+	products = Product.objects.all().order_by("?")[:6]
+	if products.count() != 6:
+		products = Product.objects.all().order_by("?")[:3]
 	context = {
 		"count":count,
 		"featured_images":featured_images,
