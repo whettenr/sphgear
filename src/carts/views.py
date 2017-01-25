@@ -29,7 +29,7 @@ from .models import Cart, CartItem
 
 
 
-if settings.DEBUG:
+if not settings.DEBUG:
 	braintree.Configuration.configure(braintree.Environment.Sandbox,
       merchant_id=settings.BRAINTREE_MERCHANT_ID,
       public_key=settings.BRAINTREE_PUBLIC,
