@@ -64,9 +64,9 @@ class Product(models.Model):
 		min_price = var_set.aggregate(Min('price'))
 		min_sale = var_set.aggregate(Min('sale_price'))
 		if min_price['price__min'] < min_sale['sale_price__min']:
-			return var_set.get(price=min_price['price__min']).firtst().get_html_price()
+			return var_set.filter(price=min_price['price__min']).first().get_html_price()
 		else:
-			return var_set.get(sale_price=min_sale['sale_price__min']).first().get_html_price()
+			return var_set.filter(sale_price=min_sale['sale_price__min']).first().get_html_price()
 
 
 
