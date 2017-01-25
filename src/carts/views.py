@@ -38,10 +38,8 @@ if settings.DEBUG:
 
 def find_user_cart_and_order(self):
 	user_carts = Cart.objects.filter(user=self.request.user).order_by('timestamp')
-	print user_carts
 	if user_carts:
 		for cart in user_carts:
-			print cart
 			orders = cart.order_set.filter(status='created')
 			if orders or not cart.order_set.all():
 				try:
@@ -49,7 +47,6 @@ def find_user_cart_and_order(self):
 				except:
 					pass
 				cart_id = cart.id
-				print "yo im out"
 				return cart_id
 
 
@@ -67,7 +64,7 @@ class ItemCountView(View):
 				cart = Cart.objects.get(id=cart_id)
 				count = cart.total_item
 			request.session["cart_item_count"] = count
-			print cart_id
+			# print "cart = " + str(cart_id)
 			return JsonResponse({"count": count})
 		else:
 			raise Http404
@@ -85,7 +82,6 @@ class CartView(SingleObjectMixin, View):
 			if self.request.user.is_authenticated():
 				cart_id = find_user_cart_and_order(self)
 			if cart_id == None:
-				print 'yuh'
 				cart = Cart()
 				cart.tax_percentage = 0.085
 				cart.total_item = 0
@@ -99,8 +95,8 @@ class CartView(SingleObjectMixin, View):
 			cart.user = self.request.user
 			cart.save()
 
-		print cart.id
-		print cart.order_set.all()
+		# print cart.id
+		# print cart.order_set.all()
 		return cart
 
 	def get(self, request, *args, **kwargs):
@@ -200,7 +196,6 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 		new_order = self.get_order()
 		user_checkout_id = request.session.get("user_checkout_id")
 		if user_checkout_id != None:
-			print "user_checkout_id != None get"
 			user_checkout = UserCheckout.objects.get(id=user_checkout_id)
 			new_order.user = user_checkout
 			new_order.save()
@@ -229,7 +224,6 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 			pass
 
 		if user_check_id != None:
-			print "user_check_id != None: get context"
 			user_can_continue = True
 			if not self.request.user.is_authenticated(): #GUEST USER
 				user_checkout_2 = UserCheckout.objects.get(id=user_check_id)
@@ -246,12 +240,10 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 	def post(self, request, *args, **kwargs):
 		self.object = self.get_object()
 		form = self.get_form()
-
 		coupon_form = self.coupon_form(request.POST)
 		
 		if coupon_form.is_valid():
 			if '_remove' in self.request.POST:
-				# print "hi"
 				order = self.get_order()
 				if order.coupon:
 					order.coupon = None
@@ -312,16 +304,19 @@ class CheckoutView(CartOrderMixin, FormMixin, DetailView):
 
 class CheckoutFinalView(CartOrderMixin, View):
 	def post(self, request, *args, **kwargs):
-
 		order = self.get_order()
 		order_total = order.order_total
-		print "order total"
-		print order_total
-		print "im printing"
-		if '_remove' in self.request.POST:
-			print 'hi'
 		nonce = request.POST.get("payment_method_nonce")
+
+		# if self.request.POST['clicked_button'] == '_remove':
+		# 	print 'hi final view'
+		# 	payment_method = braintree.PaymentMethod.find(nonce)
+		# 	print payment_method
+		# 	result = braintree.PaymentMethod.delete(nonce)
+		# 	print result.is_success
+		# 	return reverse("checkout")
 		if nonce:
+			
 			result = braintree.Transaction.sale({
 			    "amount": order_total,
 			    "payment_method_nonce": nonce,
@@ -336,7 +331,6 @@ class CheckoutFinalView(CartOrderMixin, View):
 
 			if result.is_success:
 				# result.transaction.id to order
-				print order.user.email
 				template = get_template('orders/order_view_email.html')
 				context = Context({
 					'order': order,
@@ -361,8 +355,8 @@ class CheckoutFinalView(CartOrderMixin, View):
 				del request.session["order_id"]
 			else:
 				#messages.success(request, "There was a problem with your order.")
-				messages.success(request, "%s" %(result.message))
-				return redirect("checkout")
+				messages.error(request, "%s" %(result.message))
+				return redirect("cart")
 
 		return redirect("order_detail", pk=order.pk)
 

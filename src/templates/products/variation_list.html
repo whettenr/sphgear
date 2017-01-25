@@ -1,35 +1,26 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 
 
 {% block content %}
-
-
-<table class='table'>
-{% for object in object_list %}
-
-<tr>
-<td><a href='{{ object.get_absolute_url }}'>{{ object.title }}</a></td><td>{{ object.inventory }}</td>
-</tr>
-
-{% endfor %}
-</table>
-
-
-<form method="POST" action=""> {% csrf_token %}
-
-{{ formset.management_form }}
-
-{% for form in formset %}
-
-{{ form.instance.product.title }}
-{{ form.instance.size }}
-{{ form.instance.color }}
-{{ form.as_p }}
-
-{% endfor %}
-<input type="submit" value='Update' class='btn' />
-</form>
-
-
+<div class="container form-container">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-login">
+              <h4><b>Inventory of {{object_list.first.product}}</b></h4><br>
+              <form action="" method="post" class="form-inline">
+              {% csrf_token %}
+			  {{formset.management_form}}
+              {% for form in formset %}
+				<h3>{{ form.instance }}</h3>
+				{{ form|crispy }}
+				<br>
+			  {% endfor %}
+			  <br>
+			  <input type="submit" value='Update' class='btn btn-primary btn-block' />
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,42 @@
+<div id="socialHolder">
+		<div id="socialShare" class="btn-group">
+		<a data-toggle="dropdown" class="btn btn-primary">
+		<i class="fa fa-share-alt fa-inverse"></i>
+		</a>
+		<button href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle share">
+		<span class="caret"></span>
+		</button>
+		
+		<ul class="dropdown-menu">
+			
+			<li>
+				<a data-original-title="Facebook" rel="tooltip"   href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-facebook" data-placement="left">
+				<i class="fa fa-facebook"></i>
+				</a>
+			</li>					
+			<li>
+				<a data-original-title="Google+" rel="tooltip"  href="https://plus.google.com/share?url={{ request.build_absolute_uri }}/" class="btn btn-google" data-placement="left">
+				<i class="fa fa-google-plus"></i>
+				</a>
+			</li>
+			<li>
+				<a data-original-title="Reddit" rel="tooltip"  href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ object.title }}." class="btn btn-reddit" data-placement="left">
+				<i class="fa fa-reddit"></i>
+				</a>
+			</li>
+			<li>
+				<a data-original-title="Pinterest" rel="tooltip" href="http://www.pinterest.com/pin/create/button/" class="btn btn-pinterest" data-placement="left">
+				<i class="fa fa-pinterest"></i>
+				</a>
+			</li>
+			<li>
+				<a  data-original-title="Email" rel="tooltip"  href="mailto:?subject=look at this 
+				{{object.title}}&body= Check it out at {{ request.build_absolute_uri }}" class="btn btn-mail" data-placement="left">
+				<i class="fa fa-envelope"></i>
+				</a>
+			</li>
+		
+		</ul>
+		
+		</div>
+</div>

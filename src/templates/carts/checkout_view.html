@@ -3,20 +3,6 @@
 {% load crispy_forms_tags %}
 
 
-
-
-
-<script>
-{% block jquery %}
-var clientToken = "{{ client_token }}";
-
-braintree.setup(clientToken, "dropin", {
-  container: "payment-form"
-});
-
-{% endblock %}
-</script>
-
 {% block content %}
 
 {% load account socialaccount %}
@@ -41,11 +27,11 @@ braintree.setup(clientToken, "dropin", {
 						{% csrf_token %}
 						<div class="form-group">
 							<label for="">Username or e-mail*</label>
-							<input type="text" class="form-control" placeholder="Username or e-mail" name="login">
+							<input type="text" class="form-control" name="login">
 							</div>
 							<div class="form-group">
 							<label for="">Password*</label>
-							<input type="password" class="form-control" placeholder="Password" name="password">
+							<input type="password" class="form-control" name="password">
 						</div>
 						
 						{% if redirect_field_value %}
@@ -93,8 +79,8 @@ braintree.setup(clientToken, "dropin", {
                   <h4>Got a Promo Code?</h4>
                   <form method="POST" action=''>{% csrf_token %}
                 {{ coupon_form|crispy }}
-                <input class="btn btn-primary" type="submit" value="Submit" name='_coupon' {% if order.coupon %}disabled{% endif %}/>
-              <input class="btn btn-danger" type="submit" value="Remove" name='_remove' />
+                  <input class="btn btn-primary" type="submit" value="Submit" name='_coupon' {% if order.coupon %}disabled{% endif %}/>
+                  <input class="btn btn-danger" type="submit" value="Remove" name='_remove' />
                 </form>
                 </div>
             </div>
@@ -105,11 +91,16 @@ braintree.setup(clientToken, "dropin", {
           <div class="form-login">
             <h4>Pay by card or PayPal</h4>
             	<form id="checkout" method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
-    			<div style="background-color: white;" id="payment-form"></div>
-    			<br>
-    			<button class="btn btn-success btn-lg btn-block" type='submit'>Complete Order of ${{ order.order_total }}</button>
-  				<input class="btn btn-danger btn-block" type="submit" value="Remove Payment Method" name='_remove' />
-    		  </form>
+          			<div id="payment-form"></div>
+          			<br>
+          			<button id="complete" class="btn btn-success btn-lg btn-block disabled" type='submit'>Complete Order of ${{ order.order_total }}</button>
+                <input class="btn btn-danger btn-block disabled" type="submit" value="Remove Payment Method" name='_remove' id="Remove" />
+                <input type="hidden" name="clicked_button" id="clicked_button" value=""/>
+
+          		  
+                </form>
+                
+
           </div>
       </div>     
     </div>
@@ -118,3 +109,28 @@ braintree.setup(clientToken, "dropin", {
 {% endif %}
 
 {% endblock %}
+
+
+
+<script>
+{% block jquery %}
+var clientToken = "{{ client_token }}";
+
+braintree.setup(clientToken, "dropin", {
+  container: "payment-form"
+});
+var checkExist = setInterval(function() {
+   if (($("#payment-form").children().length > 0) && (typeof window.braintree !== 'undefined') ) {
+      $("#complete").removeClass("disabled");
+   }
+}, 600);
+
+$("#Remove").click(function() {
+    document.getElementById('clicked_button').value = $("#Remove").attr("name");
+    console.log($("#Remove"))
+    console.log($("#Remove").value)
+    console.log($("#Remove").name)
+})
+
+{% endblock %}
+</script>

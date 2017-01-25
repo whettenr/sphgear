@@ -36,7 +36,7 @@
 
     <div class='container'>
       <div class='alert alert-warning'>
-          <p>This is a test site</p>
+          <p>This site is in development mode data could be removed at any time</p>
       </div>
     </div>
 
@@ -69,6 +69,12 @@
     $(document).ready(function(){
         {% block jquery %}
         {% endblock %}
+        $(".content-markdown").each(function(){
+          var content = $(this).text()
+          var markedContent = marked(content)
+          $(this).html(markedContent)
+        })
+
     });
 
     </script>

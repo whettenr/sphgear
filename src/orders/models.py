@@ -190,7 +190,7 @@ def order_pre_save(sender, instance, *args, **kwargs):
 	# print shipping_price
 	
 	#cart_total = instance.cart.total
-	print instance.order_total
+	print  instance.order_total
 	#order_total = Decimal(instance.shipping_price) + Decimal(instance.cart.total)
 
 	# instance.shipping_price = shipping_price
@@ -199,6 +199,12 @@ def order_pre_save(sender, instance, *args, **kwargs):
 pre_save.connect(order_pre_save, sender=Order)
 
 def order_post_save(sender, instance, *args, **kwargs):
+	if instance.status == "paid":
+		for i in instance.cart.cartitem_set.all():
+			print  "old: " + str(i.item.inventory)
+			i.item.inventory = i.item.inventory - i.quantity
+			print  "new: " + str(i.item.inventory)
+			i.item.save()
 
 	if instance.status == "shipped" or instance.status == "refunded":
 		order = instance

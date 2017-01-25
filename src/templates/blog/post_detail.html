@@ -98,6 +98,8 @@
                     <li><a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ share_string }}."><i class="fa fa-reddit"></i></a></li>
                     <li><a href="https://plus.google.com/share?url={{ request.build_absolute_uri }}/"><i class="fa fa-google-plus"></i> </a></li>
                     <li><a href="http://www.pinterest.com/pin/create/button/"><i class="fa fa-pinterest-p"></i></a></li>
+                    <li><a href="mailto:?subject=Check out this SPH post '{{title}}'&body= View at: {{ request.build_absolute_uri }}">
+                    <i class="fa fa-envelope"></i></a></li>
                   </ul>
                   {% if request.user.is_staff %}
                   <a class="btn btn-danger text-right" href="{% url 'posts:update' instance.slug %}" role="button">Edit Post</a>
@@ -106,16 +108,13 @@
             </div>
         </div>
       </div>
+{% include "socialHolder.html" %}
 
 {% endblock content %}
 
 <script>
 {% block jquery %}
-  $(".content-markdown").each(function(){
-      var content = $(this).text()
-      var markedContent = marked(content)
-      $(this).html(markedContent)
-  })
+
   $(".post-detail-item img").each(function(){
       $(this).addClass("img-responsive");
   })

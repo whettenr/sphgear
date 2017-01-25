@@ -65,7 +65,4 @@ class CartOrderMixin(object):
 					order.shipping_location_cost = ship_location[0]
 			order.shipping_price = shipping_price
 			order.order_weight = weight
-			print shipping_price
-			print weight
-			print order.order_weight
-			print "about to return"
+			

@@ -3,9 +3,13 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-.main {
+@media (min-width: 768px) {
+  .main {
   min-height: 490px;
 }
+
+}
+
 
 
 /* ------------------- Footer ------------------- */
@@ -380,9 +384,9 @@ h4 {
 .fa-reddit {
   background: #ff4500;
 }
-
-
-
+.fa-envelope {
+  background-color: #FFC90E
+}
 /* ------------------- product detail ------------------- */
 
 .preview {
@@ -478,25 +482,7 @@ h4 {
   .color:first-of-type {
     margin-left: 20px; }
 
-.add-to-cart, .like {
-  padding: 1.2em 1.5em;
-  border: none;
-  text-transform: UPPERCASE;
-  font-weight: bold;
-  color: #fff;
-  -webkit-transition: background .3s ease;
-          transition: background .3s ease; }
-  .add-to-cart:hover, .like:hover {
-    background: #b36800;
-    color: #fff; }
 
-.not-available {
-  text-align: center;
-  line-height: 2em; }
-  .not-available:before {
-    font-family: fontawesome;
-    content: "\f00d";
-    color: #fff; }
 
 
 @-webkit-keyframes opacity {
@@ -519,6 +505,20 @@ h4 {
     -webkit-transform: scale(1);
             transform: scale(1); } }
 
+
+/* ------------------- social stuff ------------------- */
+
+@media screen and (max-width: 768px) {
+  #product-share {
+    display:none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  #socialHolder {
+    display:none; 
+  } 
+}
 
 #socialHolder {
   position: fixed;
@@ -615,10 +615,10 @@ h4 {
     max-width:200px;
     margin-bottom:18px;
 }
-
+/*
 #socialShare > a{
     padding: 6px 10px 6px 10px;
-}
+}*/
 
 @media (max-width : 320px) {
     #socialHolder{
@@ -631,84 +631,8 @@ h4 {
     }
 }
 
-/*colors*/
+/*footer colors*/
 
-/*navbar*/
-/*.navbar-inverse, .navbar-brand {
-  background-color: #084b53;
-  color: #e6ebef !important;
-  border:none;
-}
-.navbar-inverse .navbar-nav>li>a {
-  color: #e6ebef !important;
-}
-
-.navbar-inverse .navbar-nav>li>a:hover {
-  color: #000 !important;
-  background-color: #fff !important;
-}
-
-.navbar-inverse .navbar-nav>.active>a, 
-.navbar-inverse .navbar-nav>.active>a:focus, 
-.navbar-inverse .navbar-nav>.active>a:hover {
-  color: #000 !important;
-  background-color: #fff !important;*/
-}
-/*btns*/
-/*.btn-primary {
-  background-color: #8b7c65;
-  border: #8b7c65;
-}
-
-.btn-primary:hover {
-  background-color: #84a5af;
-  border: #84a5af;
-}
-.btn-danger {
- background-color: #891b5a;
- border:#891b5a;
-}
-
-.btn-success {
-  background-color: #084b53;
-  border: #084b53;
-}
-
-.btn-success:hover {
-  background-color: #84a5a9;
-  border: #84a5a9;
-}
-
-#menu-toggle {
-  background-color: #5c4e41;
-}
-#menu-toggle:hover {
-  background-color: #8b7c65;
-}
-
-
-#sidebar-wrapper {
-  background: #d3d7e2;
-}
-
-.pagination>.active>a, 
-.pagination>.active>a:focus, 
-.pagination>.active>a:hover, 
-.pagination>.active>span, 
-.pagination>.active>span:focus, 
-.pagination>.active>span:hover {
-  background-color: #8b7c65;
-  border: #084b53;
-}*/
-
-
-/*footer*/
-
-.footer {
-  background: #84a5a9;
-  border-bottom: 1px solid #084b53;
-  border-top: 1px solid #064951;
-}
 .footer h3 {
   border-bottom: 1px solid #084b53;
   color: #084b53;
@@ -731,3 +655,15 @@ h4 {
 
 
 
+.margin-auto {
+  width: 17em;
+  margin-left: auto;
+  margin-right: auto;
+  text-align:center;
+}
+
+
+
+/*#complete{
+   display:none;
+}*/

@@ -60,11 +60,10 @@
           </div>
         </div>
       </div>
-  </div>
 </section>
 <section class="container">
   <hr>
-  <h2>SPH Gear Recently Posted <small><a href="{% url 'posts:list'%}">view blog <i class="fa fa-chevron-right" aria-hidden="true"></i></a></small></h2>
+  <h2>Recent News <small><a href="{% url 'posts:list'%}">view blog <i class="fa fa-chevron-right" aria-hidden="true"></i></a></small></h2>
   <hr>
 
   <div class="row">
@@ -80,7 +79,7 @@
     </div>
     {% endif %}
     <div class="panel-body">
-      {{ obj.get_markdown|truncatechars_html:120 }}
+    <div class="content-markdown">{{ obj.content|truncatechars_html:300  }}</div>
       <p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">View</a></p>
     </div>
     <div class="panel-footer"><i class="fa fa-clock-o" aria-hidden="true"></i> 

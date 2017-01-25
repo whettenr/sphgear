@@ -54,11 +54,7 @@ class UserAddressCreateView(CreateView):
 		return user_checkout
 
 	def form_valid(self, form, *args, **kwargs):
-		print 'out here'
 		form.instance.user = self.get_checkout_user()
-		print 'out here'
-		if self.request.POST:
-			print "howdy"	
 		return super(UserAddressCreateView, self).form_valid(form, *args, **kwargs)
 
 # class UserAddressUpdateView(UpdateView):
@@ -107,12 +103,8 @@ class AddressSelectFormView(CartOrderMixin, FormView):
 		if '_remove' in self.request.POST:
 			if shipping_address:
 				address = UserAddress.objects.get(id=shipping_address.id)
-				print address
-				print address.active
 				address.active = False
 				address.save()
-				print address
-				print address.active
 
 				return redirect("/checkout/address/")
 			else:

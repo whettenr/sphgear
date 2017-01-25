@@ -76,8 +76,6 @@ class Post(models.Model):
     def get_markdown(self):
         content = self.content
         markdown_text = markdown(content)
-        print markdown_text
-        print mark_safe(markdown_text) 
         return mark_safe(markdown_text)
 
     @property
