@@ -61,8 +61,8 @@ class Product(models.Model):
 
 	def get_min_price(self):
 		var_set = self.variation_set.all()
-		min_price = var_set.aggregate(Min('price'))
-		min_sale = var_set.aggregate(Min('sale_price'))
+		min_price = var_set.aggregate(Min('price'))[0]
+		min_sale = var_set.aggregate(Min('sale_price'))[0]
 		if min_price['price__min'] < min_sale['sale_price__min']:
 			return var_set.get(price=min_price['price__min']).get_html_price()
 		else:
