@@ -57,6 +57,7 @@ class Product(models.Model):
 		img_set = []
 		for var in var_set:
 			img_set += var.productimage_set.all()
+		print img_set
 		return img_set #None
 
 	def get_min_price(self):

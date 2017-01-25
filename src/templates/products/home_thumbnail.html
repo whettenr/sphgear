@@ -1,6 +1,6 @@
 <div class="productbox">
-    {% if product.get_image_url %}
-    <img src="{{ product.get_image_url }}" class="img-responsive">
+    {% if product.get_image_set %}
+    <img src="{{ product.get_image_set.0.image.url }}" class="img-responsive">
     {% endif %}
     <div class="producttitle">{{ product.title }}</div>
     <div class="productprice"><div class="pull-right"><a href="{{product.get_absolute_url}}" class="btn btn-primary btn-sm" role="button">BUY</a></div><div class="pricetext"> <i class="fa fa-usd" aria-hidden="true"></i>{{product.get_min_price}}</div></div>
