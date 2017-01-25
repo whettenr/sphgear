@@ -52,7 +52,7 @@
 							<select name='size' class='form-control size-select'>
 								{% for size in sizes %}
 								<option  data-size="{{ size.size }}" value="{{size.size}}">
-									{{ size.size }} 
+									{{ size.size|escape }} 
 								</option>
 								{% endfor %}
 							</select>
@@ -131,7 +131,7 @@ function setPrice(){
 	  if (size == '{{vari_obj.size|safe}}' && color == '{{vari_obj.color|safe}}') {
     		sale_price = '{{vari_obj.sale_price}}'
     		price = '{{vari_obj.price}}'
-    		console.log('{{vari_obj.inventory}}')
+    		// console.log('{{vari_obj.inventory}}')
     		if('{{vari_obj.inventory}}' != 'None'){
     			if({{vari_obj.inventory}} >= 1) {
         			check = true
@@ -210,7 +210,7 @@ $("#cart-btn").click(function(event){
     	values[field.name] = field.value;
 	});
 	var formData = 'item='+getId()+'&'+'qty='+values['qty']
-	console.log(formData); 
+	// console.log(formData); 
 	$.ajax({
 		type: "GET", // "POST"
 		url: "{% url 'cart' %}",
