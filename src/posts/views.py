@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 try:
     from urllib import quote_plus #python 2
 except:
@@ -46,7 +47,7 @@ def post_detail(request, slug=None):
 	if instance.publish > timezone.now().date() or instance.draft:
 		if not request.user.is_staff or not request.user.is_superuser:
 			raise Http404
-	share_string = quote_plus(instance.content)
+	share_string = quote_plus(instance.content.encode('utf-8'), safe=':/')
 	print share_string
 
 	initial_data = {
