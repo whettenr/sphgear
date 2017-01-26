@@ -16,10 +16,13 @@ class VariationInline(admin.TabularInline):
 
 class ProductImageAdmin(admin.ModelAdmin):
 	list_display = ['__unicode__', 'product_var']
+	list_filter = ['product_var']
 
 
 class ProductAdmin(admin.ModelAdmin):
-	list_display = ['__unicode__', 'weight']
+	list_display = ['__unicode__', 'weight','default']
+	list_editable = ['default']
+
 	inlines = [
 		VariationInline,
 	]
