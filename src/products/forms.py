@@ -12,7 +12,7 @@ from .models import Variation, Category
 # )
 
 class ProductFilterForm(forms.Form):
-	q = forms.CharField(label='Search Products', required=False)
+	q = forms.CharField(label='Add Filters', required=False)
 	category_id = forms.ModelMultipleChoiceField(
 		label='Category',
 		queryset=Category.objects.all(), 

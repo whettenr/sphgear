@@ -219,8 +219,9 @@ footer .fa-instagram {
 }
 
 .pricetext {
+  padding-top: 10px;
   font-weight:bold;
-  font-size:1.4em;
+  font-size:1.2em;
 }
 
 
