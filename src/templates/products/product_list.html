@@ -26,7 +26,9 @@
 Nothing found
 
 {% else %}
-{% include "products/products.html" with object_list=object_list %}
+{% for product in object_list %}   
+		{% include "products/product_thumbnail.html" with product=product price="True" %}
+    {% endfor %}
 {% endif %}
 
 </div>
