@@ -67,7 +67,7 @@ class Featured(models.Model):
 	text = models.CharField(max_length=220, null=True, blank=True)
 	title_animation = models.CharField(max_length=20, choices=ANIMATION_CHOICES)	
 	button_animation = models.CharField(max_length=20, choices=ANIMATION_CHOICES, null=True, blank=True)
-	text_animation = models.CharField(max_length=10, choices=ANIMATION_CHOICES, null=True, blank=True)	
+	text_animation = models.CharField(max_length=20, choices=ANIMATION_CHOICES, null=True, blank=True)	
 	
 	image = models.ImageField(upload_to=image_upload_to_featured)
 
