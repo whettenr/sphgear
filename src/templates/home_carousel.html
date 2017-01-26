@@ -21,8 +21,8 @@
                 <div class="row">
                     <!-- Slide Text Layer -->
                     <div class="slide-text {{pic.position}}">
-                        <h1 data-animation="animated {{pic.title_animation}}">{{pic.position}} {{pic.title}} {{pic.title_animation}}</h1>
-                        <p data-animation="animated {{pic.text_animation}}">{{pic.text}} {{pic.text_animation}}</p>
+                        <h1 data-animation="animated {{pic.title_animation}}"> {{pic.title}}</h1>
+                        <p data-animation="animated {{pic.text_animation}}">{{pic.text}}</p>
                         {% if pic.product %}
                         <a href="{{pic.product.get_absolute_url}}" class="btn btn-default" data-animation="animated {{pic.button_animation}}">view product</a>
                         {% endif %}
