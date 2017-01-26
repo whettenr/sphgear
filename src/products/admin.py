@@ -22,6 +22,8 @@ class ProductImageAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
 	list_display = ['__unicode__', 'weight','default']
 	list_editable = ['default']
+	list_filter = ['default']
+
 
 	inlines = [
 		VariationInline,
